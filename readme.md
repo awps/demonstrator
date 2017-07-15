@@ -40,7 +40,7 @@ It will create a bar on top that will make possible to switch between demos.
 ## Support & Donate: 
 
 Hi.<br>
-I invested a considerably amount of time in this product. And I still have a lot of work to do on it. See the above 'TODO' list.
+I invested a considerable amount of time in this product. And I still have a lot of work to do on it. See the above 'TODO' list.
 Consider making a donation if you find this product useful. Don't ignore this message. Your donation will make a difference.
 I would like to improve it as much as I can, but your support is needed.
 
