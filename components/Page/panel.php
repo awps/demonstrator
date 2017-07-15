@@ -156,7 +156,7 @@ class Dts_Settings_Panel_Init{
 
 			dmstr()->addScript( demonstrator_config('id') . '-config-admin', array(
 				'src'     => dmstr()->assetsURL( 'js/config-admin.js' ),
-				'deps'    => array( 'jquery' ),
+				'deps'    => array( 'jquery', 'jquery-ui-core', 'jquery-ui-sortable' ),
 				'enqueue' => true,
 				'zwpocp_presets' => array(
 					'ajax_url' => admin_url( 'admin-ajax.php' ),
@@ -1100,16 +1100,31 @@ class Dts_Settings_Field_Themes extends Dts_Settings_Field_Type{
 
 				$new_themes[ $temp_id ]['styles'] = $styles;
 
-				if( ! array_key_exists( $theme['id'], $new_themes ) ){
-					$new_themes[ $theme['id'] ] = $theme;
-					unset( $new_themes[ $temp_id ] );
-				}
+				// if( ! array_key_exists( $theme['id'], $new_themes ) ){
+				// 	$new_themes[ $theme['id'] ] = $theme;
+				// 	unset( $new_themes[ $temp_id ] );
+				// }
+				$new_themes = $this->replaceArrayKey( $new_themes, $temp_id, $theme['id'] );
+
 			}			
 			$value = $new_themes;
 		}
 
 		return $value;
 	}
+
+	public function replaceArrayKey($array, $key1, $key2){
+		$keys = array_keys($array);
+		$index = array_search($key1, $keys);
+
+		if ($index !== false) {
+			$keys[$index] = $key2;
+			$array = array_combine($keys, $array);
+		}
+
+		return $array;
+	}
+
 }
 dts_register_field_type( 'themes', 'Dts_Settings_Field_Themes' );
 

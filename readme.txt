@@ -8,7 +8,7 @@ Stable tag: 1.0
 License: GPL-2.0+
 License URI: http://www.gnu.org/licenses/gpl-2.0.txt
 
-A theme switcher that should be used to connect different site demos.
+A theme switcher perfect to connect different site demos.
 
 == Description ==
 This is a theme switcher designed for **theme developers**. When installed, the current site will become blank, the current theme will be ignored and the site will become a placeholder for an iframe where will be loaded different site addresses. 
@@ -41,6 +41,10 @@ It will create a bar on top that will make possible to switch between demos.
 * Lazy-load items. Right now all themes and styles regardless if they are needed or not. It's needed to load to load each theme and style just when needed(probably using ajax). Ideas are welcome.
 * Add the possibility to customize the design of the switcher itself.
 * Create the styles for price and description.
+* Make a theme unlisted. This is usefull when you have to show the demo, but you don;t have the purchase URL yet. Example: You submitted for review and the theme should be visible only to reviewer, but not to other users. This will be possible only by using a direct link.
+* Make themes and styles sortable( in admin panel ).
+* Do not hide the dropdown if no theme is selected.
+* Add the possibility to activate google analytics.
 
 ## Support & Donate: 
 
@@ -51,3 +55,5 @@ I would like to improve it as much as I can, but your support is needed.
 
 Donate link: https://paypal.me/zerowp
 
+## Issues tracker:
+Please report bugs on: https://github.com/ZeroWP/demonstrator/issues

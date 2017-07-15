@@ -198,6 +198,13 @@
 
 				},
 
+				closeAllAccordionSections: function(){
+					var the_ul = $(this).prev('.themes-repeatable-block');
+
+					$( the_ul ).children().removeClass('acc_active');
+					$( the_ul ).find('.acc_content').slideUp(150);
+				},
+
 				repeatableStyles: function(){
 
 					// Add new section
@@ -233,6 +240,22 @@
 
 				},
 
+				// Make accordion sections sortable
+				sortableAccordionSections: function(){
+					var blocks = jQuery(".demonstrator_themes");
+					blocks.sortable({
+						items: "> li",
+						axis: "y",
+						tolerance: "pointer",
+						handle: ".acc_head",
+						cancel: '.delete-theme',
+						start: function( event, ui ) {
+							self.closeAllAccordionSections();
+						}
+					});
+					blocks.find('h3.accordion-section-title').disableSelection();
+				},
+
 				/*
 				-------------------------------------------------------------------------------
 				Construct plugin
@@ -244,6 +267,7 @@
 					self.openFrame();
 					self.repeatableThemes();
 					self.repeatableStyles();
+					self.sortableAccordionSections();
 
 					return this;
 				}
