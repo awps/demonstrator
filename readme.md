@@ -1,20 +1,11 @@
-=== Plugin Name ===
-Contributors: _smartik_
-Donate link: https://paypal.me/zerowp
-Tags: theme, switcher, demo, connect, themeforest, creativemarket, codecanyon, mojothemes
-Requires at least: 4.7
-Tested up to: 4.8
-Stable tag: 1.0
-License: GPL-2.0+
-License URI: http://www.gnu.org/licenses/gpl-2.0.txt
+## Description
 
 A theme switcher perfect to connect different site demos.
 
-== Description ==
 This is a theme switcher designed for **theme developers**. When installed, the current site will become blank, the current theme will be ignored and the site will become a placeholder for an iframe where will be loaded different site addresses. 
 It will create a bar on top that will make possible to switch between demos.
 
-**If you are not a theme developer, you should not install it. It is useless for regular users and may **
+**If you are not a theme developer, you should not install it. It is useless for regular users.**
 
 **Note:** *Go to permalinks and setup an endpoint name for this switcher. That way you can can get the website back to normal and use the swither only when the endpoint is accessed.*
 
@@ -48,9 +39,9 @@ It will create a bar on top that will make possible to switch between demos.
 
 ## Support & Donate: 
 
-Hi.
-I invested a considerably ammount of time in this product. And I still have a lot of work to do on it. See the above 'TODO' list.
-Consider making a donation if this product if you find it useful. Don't ignore this message. Your donation will make a difference.
+Hi.<br>
+I invested a considerably amount of time in this product. And I still have a lot of work to do on it. See the above 'TODO' list.
+Consider making a donation if you find this product useful. Don't ignore this message. Your donation will make a difference.
 I would like to improve it as much as I can, but your support is needed.
 
 Donate link: https://paypal.me/zerowp
