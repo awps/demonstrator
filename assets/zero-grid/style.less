@@ -1,0 +1,465 @@
+/**
+ * ZeroGrid
+ *
+ * Description:  A modern CSS flexbox grid system.
+ * Source:       https://github.com/Smartik89/ZeroGrid
+ * Version:      1.0-beta
+ * License:      MIT
+ * 
+ */
+// ----------------------------------------------------------------------------
+// Variables
+// ----------------------------------------------------------------------------
+@zg-space:             15px;
+@zg-nr-of-columns:     12;
+@zg-view-xs-string:    xs;
+@zg-view-sm-string:    sm;
+@zg-view-md-string:    md;
+@zg-view-lg-string:    lg;
+
+@zg-xs-size:           480px;
+@zg-sm-size:           768px;
+@zg-md-size:           980px;
+@zg-lg-size:           1200px;
+
+@zg-xs-size-min:       unit( (@zg-xs-size + 1), px );
+@zg-xs-size-max:       unit( (@zg-sm-size + 1), px );
+
+@zg-sm-size-min:       unit( (@zg-sm-size + 1), px );
+@zg-sm-size-max:       unit( (@zg-md-size + 1), px );
+
+@zg-md-size-min:       unit( (@zg-md-size + 1), px );
+@zg-md-size-max:       unit( (@zg-lg-size + 1), px );
+
+@zg-lg-size-min:       unit( (@zg-lg-size + 1), px );
+@zg-lg-size-max:       unit( (@zg-lg-size + 1), px );
+
+// ----------------------------------------------------------------------------
+// Flexbox mixins
+// ----------------------------------------------------------------------------
+.zg-align-content(...) {
+	@process: ~`(function(t){return t=t||"stretch"})((function(){var r="@{arguments}";return r=r.replace(/^\[|\]$/g,"")})())`;
+	@process_ms: ~`(function(e){return e=e||"stretch","flex-start"==e?e="start":"flex-end"==e?e="end":"space-between"==e?e="justify":"space-around"==e&&(e="distribute"),e})((function(){var r="@{arguments}";return r=r.replace(/^\[|\]$/g,"")})())`;
+	-webkit-align-content: @process;
+	-ms-flex-line-pack: @process_ms;
+	align-content: @process;
+}
+
+.zg-align-items(...) {
+	@process_olderwebkit: ~`(function(t){return t=t||"stretch","flex-start"==t?t="start":"flex-end"==t&&(t="end"),t})((function(){var r="@{arguments}";return r=r.replace(/^\[|\]$/g,"")})())`;
+	@process_moz: ~`(function(t){return t=t||"stretch","flex-start"==t?t="start":"flex-end"==t&&(t="end"),t})((function(){var r="@{arguments}";return r=r.replace(/^\[|\]$/g,"")})())`;
+	@process: ~`(function(t){return t=t||"stretch"})((function(){var r="@{arguments}";return r=r.replace(/^\[|\]$/g,"")})())`;
+	@process_ms: ~`(function(t){return t=t||"stretch","flex-start"==t?t="start":"flex-end"==t&&(t="end"),t})((function(){var r="@{arguments}";return r=r.replace(/^\[|\]$/g,"")})())`;
+	-webkit-box-align: @process_olderwebkit;
+	-moz-box-align: @process_moz;
+	-webkit-align-items: @process;
+	-ms-flex-align: @process_ms;
+	align-items: @process;
+}
+
+.zg-align-self(...) {
+	@process: ~`(function(n){return n=n||"auto"})((function(){var r="@{arguments}";return r=r.replace(/^\[|\]$/g,"")})())`;
+	@process_ms: ~`(function(t){return t=t||"auto","flex-start"==t?t="start":"flex-end"==t&&(t="end"),t})((function(){var r="@{arguments}";return r=r.replace(/^\[|\]$/g,"")})())`;
+	-webkit-align-self: @process;
+	-ms-flex-item-align: @process_ms;
+	align-self: @process;
+}
+
+.zg-box-sizing(...) {
+	@process: ~`(function(n){return n=n||"content-box"})((function(){var r="@{arguments}";return r=r.replace(/^\[|\]$/g,"")})())`;
+	-webkit-box-sizing: @process;
+	-moz-box-sizing: @process;
+	box-sizing: @process;
+}
+
+.zg-display(...) {
+	@process_oldwebkit: ~`(function(e){return e="flex"==e||"inline-flex"==e?"-webkit-box":8121991})((function(){var r="@{arguments}";return r=r.replace(/^\[|\]$/g,"")})())`;
+	@process_moz: ~`(function(n){return n="flex"==n||"inline-flex"==n?"-moz-box":8121991})((function(){var r="@{arguments}";return r=r.replace(/^\[|\]$/g,"")})())`;
+	@process_webkit: ~`(function(e){return e="flex"==e||"inline-flex"==e?"-webkit-"+e:8121991})((function(){var r="@{arguments}";return r=r.replace(/^\[|\]$/g,"")})())`;
+	@process_ms: ~`(function(e){return e="flex"==e?"-ms-flexbox":"inline-flex"==e?"-ms-inline-flexbox":8121991})((function(){var r="@{arguments}";return r=r.replace(/^\[|\]$/g,"")})())`;
+	@process: ~`(function(n){return"flex"!=n&&"inline-flex"!=n&&(n=8121991),n})((function(){var r="@{arguments}";return r=r.replace(/^\[|\]$/g,"")})())`;
+	display: @process_oldwebkit;
+	display: @process_moz;
+	display: @process_webkit;
+	display: @process_ms;
+	display: @process;
+}
+
+.zg-flex(...) {
+	@process_olderwebkit: ~`(function(t){return/^\d+/.test(t)?t=t.match(/^\d+/)[0]:""==t&&(t="0"),t})((function(){var r="@{arguments}";return r=r.replace(/^\[|\]$/g,"")})())`;
+	@process_moz: ~`(function(t){return/^\d+/.test(t)?t=t.match(/^\d+/)[0]:""==t&&(t="0"),t})((function(){var r="@{arguments}";return r=r.replace(/^\[|\]$/g,"")})())`;
+	@process: ~`(function(t){return t=t||"0 1 auto",/^[^, ]*,/.test(t)&&(t=t.replace(/(?:,)(?![^(]*\))/g,"")),t})((function(){var r="@{arguments}";return r=r.replace(/^\[|\]$/g,"")})())`;
+	-webkit-box-flex: @process_olderwebkit;
+	-moz-box-flex: @process_moz;
+	-webkit-flex: @process;
+	-ms-flex: @process;
+	flex: @process;
+}
+
+.zg-flex-basis(...) {
+	@process: ~`(function(t){t=t||"auto";var n=/\d/gi,r=/(?:\s|^)(\.?\d+\.?\d*)(?![^(]*\)|\w|%|\.)/gi;return n.test(t)&&(t=t.replace(r,function(t){return 0==t&&t||t+"px"})),t})((function(){var r="@{arguments}";return r=r.replace(/^\[|\]$/g,"")})())`;
+	-webkit-flex-basis: @process;
+	flex-basis: @process;
+}
+
+.zg-flex-direction(...) {
+	@process_oldestwebkit: ~`(function(r){return r="row"==r||"column"==r?"normal":"row-reverse"==r||"column-reverse"==r?"reverse":8121991})((function(){var r="@{arguments}";return r=r.replace(/^\[|\]$/g,"")})())`;
+	@process_oldermoz: ~`(function(r){return r="row"==r||"column"==r?"normal":"row-reverse"==r||"column-reverse"==r?"reverse":8121991})((function(){var r="@{arguments}";return r=r.replace(/^\[|\]$/g,"")})())`;
+	@process_olderwebkit: ~`(function(r){return r="row"==r||"row-reverse"==r?"horizontal":"column"==r||"column-reverse"==r?"vertical":8121991})((function(){var r="@{arguments}";return r=r.replace(/^\[|\]$/g,"")})())`;
+	@process_moz: ~`(function(r){return r="row"==r||"row-reverse"==r?"horizontal":"column"==r||"column-reverse"==r?"vertical":8121991})((function(){var r="@{arguments}";return r=r.replace(/^\[|\]$/g,"")})())`;
+	@process: ~`(function(n){return n=n||"row"})((function(){var r="@{arguments}";return r=r.replace(/^\[|\]$/g,"")})())`;
+	-webkit-box-direction: @process_oldestwebkit;
+	-moz-box-direction: @process_oldermoz;
+	-webkit-box-orient: @process_olderwebkit;
+	-moz-box-orient: @process_moz;
+	-webkit-flex-direction: @process;
+	-ms-flex-direction: @process;
+	flex-direction: @process;
+}
+
+.zg-flex-grow(...) {
+	@process: ~`(function(n){return n=n||"0"})((function(){var r="@{arguments}";return r=r.replace(/^\[|\]$/g,"")})())`;
+	-webkit-flex-grow: @process;
+	flex-grow: @process;
+}
+
+.zg-flex-shrink(...) {
+	@process: ~`(function(n){return n=n||"1"})((function(){var r="@{arguments}";return r=r.replace(/^\[|\]$/g,"")})())`;
+	-webkit-flex-shrink: @process;
+	flex-shrink: @process;
+}
+
+.zg-flex-wrap(...) {
+	@process: ~`(function(n){return n=n||"nowrap"})((function(){var r="@{arguments}";return r=r.replace(/^\[|\]$/g,"")})())`;
+	-webkit-flex-wrap: @process;
+	-ms-flex-wrap: @process;
+	flex-wrap: @process;
+}
+
+.zg-justify-content(...) {
+	@process_oldestWebkit: ~`(function(e){return e=e||"start","flex-start"==e?e="start":"flex-end"==e?e="end":"space-between"!=e&&"space-around"!=e||(e="justify"),e})((function(){var r="@{arguments}";return r=r.replace(/^\[|\]$/g,"")})())`;
+	@process_moz: ~`(function(e){return e=e||"start","flex-start"==e?e="start":"flex-end"==e?e="end":"space-between"!=e&&"space-around"!=e||(e="justify"),e})((function(){var r="@{arguments}";return r=r.replace(/^\[|\]$/g,"")})())`;
+	@process_ms: ~`(function(t){return t=t||"start","flex-start"==t?t="start":"flex-end"==t?t="end":"space-between"==t?t="justify":"space-around"==t&&(t="distribute"),t})((function(){var r="@{arguments}";return r=r.replace(/^\[|\]$/g,"")})())`;
+	@process: ~`(function(t){return t=t||"flex-start"})((function(){var r="@{arguments}";return r=r.replace(/^\[|\]$/g,"")})())`;
+	-webkit-box-pack: @process_oldestWebkit;
+	-moz-box-pack: @process_moz;
+	-ms-flex-pack: @process_ms;
+	-webkit-justify-content: @process;
+	justify-content: @process;
+}
+
+.zg-order(...) {
+	@process: ~`(function(n){return n=n||"0"})((function(){var r="@{arguments}";return r=r.replace(/^\[|\]$/g,"")})())`;
+	-webkit-box-ordinal-group: @process;
+	-moz-box-ordinal-group: @process;
+	-ms-flex-order: @process;
+	-webkit-order: @process;
+	order: @process;
+}
+
+// ----------------------------------------------------------------------------
+// Mixin: Utils
+// ----------------------------------------------------------------------------
+.zg-utils( @view ){
+	
+
+	/* Columns horizontal align
+	-------------------------*/
+	.zg@{view}-left { 
+		.zg-justify-content( flex-start ); 
+	}
+	.zg@{view}-right { 
+		.zg-justify-content( flex-end ); 
+	}
+	.zg@{view}-center { 
+		.zg-justify-content( center ); 
+	}
+
+
+	/* Columns vertical align
+	----------------------------------*/
+	.zg@{view}-top { 
+		.zg-align-items( flex-start ); 
+	}
+	.zg@{view}-middle { 
+		.zg-align-items( center ); 
+	}
+	.zg@{view}-bottom { 
+		.zg-align-items( flex-end ); 
+	}
+	
+	
+	/* Columns hv space
+	------------------------*/
+	.zg@{view}-collapse{
+		margin: 0;
+		> * {
+			padding: 0;
+		}
+	}
+
+	/* Columns horizontal space between
+	----------------------------------------*/
+	.zg@{view}-normal,
+	.zg@{view}-h-normal{
+		margin-left: -(@zg-space);
+		margin-right: -(@zg-space);
+		> * {
+			padding-left: @zg-space;
+			padding-right: @zg-space;
+		}
+	}
+	.zg@{view}-small,
+	.zg@{view}-h-small{
+		margin-left: -(@zg-space/2);
+		margin-right: -(@zg-space/2);
+		> * {
+			padding-left: @zg-space/2;
+			padding-right: @zg-space/2;
+		}
+	}
+	.zg@{view}-large,
+	.zg@{view}-h-large{
+		margin-left: -(@zg-space*2);
+		margin-right: -(@zg-space*2);
+		> * {
+			padding-left: @zg-space*2;
+			padding-right: @zg-space*2;
+		}
+	}
+
+
+	/* Columns vertical space between
+	--------------------------------------*/
+	.zg@{view}-normal,
+	.zg@{view}-v-normal{
+		margin-top: -(@zg-space);
+		margin-bottom: -(@zg-space);
+		> * {
+			padding-top: @zg-space;
+			padding-bottom: @zg-space;
+		}
+	}
+	.zg@{view}-small,
+	.zg@{view}-v-small{
+		margin-top: -(@zg-space/2);
+		margin-bottom: -(@zg-space/2);
+		> * {
+			padding-top: @zg-space/2;
+			padding-bottom: @zg-space/2;
+		}
+	}
+	.zg@{view}-large,
+	.zg@{view}-v-large{
+		margin-top: -(@zg-space*2);
+		margin-bottom: -(@zg-space*2);
+		> * {
+			padding-top: @zg-space*2;
+			padding-bottom: @zg-space*2;
+		}
+	}
+
+
+	/* Columns horizontal direction
+	-----------------------------------------*/
+	.zg@{view}-rtl { 
+		.zg-flex-direction( row-reverse ); 
+	}
+	.zg@{view}-ltr { 
+		.zg-flex-direction( row ); 
+	}
+	
+
+	/* Columns wrapping in multiple lines
+	------------------------------------------*/
+	.zg@{view}-nowrap { 
+		.zg-flex-wrap( nowrap ); 
+	}
+	.zg@{view}-wrap { 
+		.zg-flex-wrap( wrap ); 
+	}
+	
+
+	/* Grid container, columns show or hide
+	--------------------------------------------*/
+	.zg@{view}-hide,
+	[class*="zg"] > .col@{view}-hide {
+		display: none;
+	}
+	.zg@{view}-show,
+	[class*="zg"] > .col@{view}-show {
+		display: inline;
+		display: initial;
+	}
+
+
+	/* Column self vertical align
+	----------------------------------*/
+	[class*="zg"] > .col@{view}-top { 
+		.zg-align-self( flex-start ); 
+	}
+	[class*="zg"] > .col@{view}-bottom { 
+		.zg-align-self( flex-end ); 
+	}
+	[class*="zg"] > .col@{view}-middle { 
+		.zg-align-self( center ); 
+	}
+
+
+	/* Column width auto
+	-------------------------*/
+	[class*="zg"] > .col@{view}-auto{ 
+		.zg-flex(0 0 auto); 
+	}
+
+
+	/* Text align
+	------------------*/
+	.text@{view}-right{
+		text-align: right;
+	}
+	.text@{view}-left{
+		text-align: left;
+	}
+	.text@{view}-center{
+		text-align: center;
+	}
+
+}
+
+
+// ----------------------------------------------------------------------------
+// Mixin: (loop)Grid column width generator
+// ----------------------------------------------------------------------------
+.zg-width-generator (@view, @n, @i) when (@i =< 4), (@i = 6), (@i = 12) {
+	@nc: 12/@i;
+	[class*="zg"] > .col@{view}-@{i},
+	.zg@{view}-@{nc} > * {
+		.zg-flex-basis( @i * 100% / @n );
+		max-width: @i * 100% / @n;
+	}
+}
+.zg-width-generator (@view, @n, @i) when (default()) {
+	[class*="zg"] > .col@{view}-@{i} {
+		.zg-flex-basis( @i * 100% / @n );
+		max-width: @i * 100% / @n;
+	}
+	.zg@{view}-@{i} {
+		> * {
+			.zg-flex-basis( 100% / @i );
+			max-width: 100% / @i;
+		}
+	}
+}
+
+// ----------------------------------------------------------------------------
+// Mixin: (loop)Columns width
+// ----------------------------------------------------------------------------
+.zg-create-columns-width(@view, @n: @zg-nr-of-columns, @i: 1) when (@i =< @n) {
+	.zg-width-generator( @view, @n, @i );
+	.zg-create-columns-width(@view, @n, (@i + 1));
+}
+
+
+// ----------------------------------------------------------------------------
+// Mixin: Grid generator
+// ----------------------------------------------------------------------------
+.zg-gen( @device ){
+
+	//Create column widths
+	.zg-create-columns-width( @device );
+
+	//Create zg and column modifiers
+	.zg-utils( @device );
+}
+
+
+//------------------------------------//--------------------------------------//
+
+
+/*
+-------------------------------------------------------------------------------
+Common zg rules
+-------------------------------------------------------------------------------
+*/
+[class*="zg"] {
+	&,
+	> [class*="zg"]{
+		list-style: none;
+		margin: 0;
+		padding: 0;
+		margin-left: -(@zg-space);
+		margin-right: -(@zg-space);
+		.zg-box-sizing( border-box );
+		.zg-flex-wrap( wrap );
+	}
+	&,
+	> [class*="zg"],
+	> .zg-flex {
+		.zg-display( flex );
+	}
+	> * {
+		.zg-flex-basis( 100% );
+		max-width: 100%;
+	}
+	> *,
+	> [class*="zg"] {
+		list-style: none;
+		margin: 0;
+		float: none;
+		padding-left: @zg-space;
+		padding-right: @zg-space;
+		.zg-box-sizing( border-box );
+	}
+}
+.zg-as-table{
+	margin-bottom: 20px;
+	> *{
+		padding-top: 10px;
+		padding-bottom: 10px;
+		border-bottom: 1px solid #ddd;
+	}
+}
+
+/*
+-------------------------------------------------------------------------------
+Grid any device
+-------------------------------------------------------------------------------
+*/
+.zg-gen( ~'' );
+
+/*
+-------------------------------------------------------------------------------
+Grid small view -xs-
+-------------------------------------------------------------------------------
+*/
+@media (min-width: @zg-xs-size-min) {
+	.zg-gen( ~"-@{zg-view-xs-string}" );
+}
+
+/*
+-------------------------------------------------------------------------------
+Small view -sm-
+-------------------------------------------------------------------------------
+*/
+@media (min-width: @zg-sm-size-min) {
+	.zg-gen( ~"-@{zg-view-sm-string}" );
+}
+
+/*
+-------------------------------------------------------------------------------
+Medium view -md-
+-------------------------------------------------------------------------------
+*/
+@media (min-width: @zg-md-size-min) {
+	.zg-gen( ~"-@{zg-view-md-string}" );
+}
+
+/*
+-------------------------------------------------------------------------------
+Large view -lg-
+-------------------------------------------------------------------------------
+*/
+@media (min-width: @zg-lg-size-min) {
+	.zg-gen( ~"-@{zg-view-lg-string}" );
+}
