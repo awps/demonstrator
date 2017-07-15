@@ -20,15 +20,16 @@ It will create a bar on top that will make possible to switch between demos.
 
 ## Features: 
 
-- [ ] The possibility to manage an unlimited number of themes directly from an admin page.
-- [ ] The possibility to add an unlimited number of styles to each theme.
-- [ ] Setup your own logo.
-- [ ] Setup your own URL that will wrap the logo in a link.
-- [ ] Display the themes and styles in a grid from 1 to 4 columns.
-- [ ] Setup the usernames for Envato and CreativeMarket referal program.
-- [ ] Short "purchase URL". The real purchase URL will be hidden in a local URL, so nobody will be able to access the purchase page without your referal ID.
-- [ ] The frame is not closed, but instead is collapsed on top. This actually is a bonus because the visitors never lose the purchase URL and the acces to other themes/styles.
-- [ ] Use the homepage and ignore the full site content, or setup a custom endpoint name.
+- [x] The possibility to manage an unlimited number of themes directly from an admin page.
+- [x] The possibility to add an unlimited number of styles to each theme.
+- [x] Setup your own logo.
+- [x] Setup your own URL that will wrap the logo in a link.
+- [x] Display the themes and styles in a grid from 1 to 4 columns.
+- [x] Setup the usernames for Envato and CreativeMarket referal program.
+- [x] Short "purchase URL". The real purchase URL will be hidden in a local URL, so nobody will be able to access the purchase page without your referal ID.
+- [x] The frame is not closed, but instead is collapsed on top. This actually is a bonus because the visitors never lose the purchase URL and the acces to other themes/styles.
+- [x] Use the homepage and ignore the full site content, or setup a custom endpoint name.
+- [x] Make themes and styles sortable( in admin panel ).
 
 ## TODO:
 
@@ -42,7 +43,6 @@ It will create a bar on top that will make possible to switch between demos.
 - [ ] Add the possibility to customize the design of the switcher itself.
 - [ ] Create the styles for price and description.
 - [ ] Make a theme unlisted. This is usefull when you have to show the demo, but you don;t have the purchase URL yet. Example: You submitted for review and the theme should be visible only to reviewer, but not to other users. This will be possible only by using a direct link.
-- [x] Make themes and styles sortable( in admin panel ).
 - [ ] Do not hide the dropdown if no theme is selected.
 - [ ] Add the possibility to activate google analytics.
 
