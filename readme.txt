@@ -11,10 +11,11 @@ License URI: http://www.gnu.org/licenses/gpl-2.0.txt
 A theme switcher perfect to connect different site demos.
 
 == Description ==
+
 This is a theme switcher designed for **theme developers**. When installed, the current site will become blank, the current theme will be ignored and the site will become a placeholder for an iframe where will be loaded different site addresses. 
 It will create a bar on top that will make possible to switch between demos.
 
-**If you are not a theme developer, you should not install it. It is useless for regular users and may **
+**If you are not a theme developer, you should not install it. It is useless for regular users.**
 
 **Note:** *Go to permalinks and setup an endpoint name for this switcher. That way you can can get the website back to normal and use the swither only when the endpoint is accessed.*
 
@@ -29,6 +30,7 @@ It will create a bar on top that will make possible to switch between demos.
 * Short "purchase URL". The real purchase URL will be hidden in a local URL, so nobody will be able to access the purchase page without your referal ID.
 * The frame is not closed, but instead is collapsed on top. This actually is a bonus because the visitors never lose the purchase URL and the acces to other themes/styles.
 * Use the homepage and ignore the full site content, or setup a custom endpoint name.
+* Make themes and styles sortable( in admin panel ).
 
 ## TODO:
 
@@ -42,15 +44,14 @@ It will create a bar on top that will make possible to switch between demos.
 * Add the possibility to customize the design of the switcher itself.
 * Create the styles for price and description.
 * Make a theme unlisted. This is usefull when you have to show the demo, but you don;t have the purchase URL yet. Example: You submitted for review and the theme should be visible only to reviewer, but not to other users. This will be possible only by using a direct link.
-* Make themes and styles sortable( in admin panel ).
 * Do not hide the dropdown if no theme is selected.
 * Add the possibility to activate google analytics.
 
 ## Support & Donate: 
 
-Hi.
-I invested a considerably ammount of time in this product. And I still have a lot of work to do on it. See the above 'TODO' list.
-Consider making a donation if this product if you find it useful. Don't ignore this message. Your donation will make a difference.
+Hi.<br>
+I invested a considerable amount of time in this product. And I still have a lot of work to do on it. See the above 'TODO' list.
+Consider making a donation if you find this product useful. Don't ignore this message. Your donation will make a difference.
 I would like to improve it as much as I can, but your support is needed.
 
 Donate link: https://paypal.me/zerowp
