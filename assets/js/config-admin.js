@@ -162,6 +162,16 @@
 					self.livetext( '.this-section-theme-id-field', '.section-theme-id' );
 					self.livetext( '.this-section-theme-category-field', '.section-theme-category' );
 
+					// Live demo link set
+					$( '.themes-repeatable-block' ).on( 'keyup change', '.this-section-theme-id-field', function(){
+						var thisval = $(this).val(),
+						base_demo_url_link = $(this).parents('.acc_section').find('.demo_url_link'),
+						base_demo_url = base_demo_url_link.data('base-url'),
+						demo_url = base_demo_url.replace( '__noindex__', thisval );
+
+						base_demo_url_link.attr( 'href', demo_url ).text( demo_url );
+					});
+
 					// Delete section
 					$('.themes-repeatable-block').on( 'click', '.delete-theme', function( event ){
 						event.preventDefault();
@@ -194,6 +204,12 @@
 								$(this).attr( 'name' ).replace( '__noindex__', array_key ) 
 							);
 						});
+
+						var base_demo_url_link = cloned.find('.demo_url_link'),
+						base_demo_url = base_demo_url_link.data('base-url'),
+						demo_url = base_demo_url.replace( '__noindex__', array_key );
+
+						base_demo_url_link.attr( 'href', demo_url ).text( demo_url );
 					});
 
 				},
@@ -225,6 +241,7 @@
 								$(this).attr( 'name' ).replace( '__stylenoindex__', array_key ) 
 							);
 						});
+
 					});
 
 					// Delete style

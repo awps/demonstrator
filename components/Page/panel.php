@@ -889,6 +889,7 @@ class Dts_Settings_Field_Themes extends Dts_Settings_Field_Type{
 		// $demo_url          = !empty( $value['demo_url'] ) ? $value['demo_url'] : '';
 		$price             = !empty( $value['price'] ) ? $value['price'] : '';
 		$short_description = !empty( $value['short_description'] ) ? $value['short_description'] : '';
+		$status            = !empty( $value['status'] ) ? $value['status'] : '';
 		$styles            = !empty( $value['styles'] ) ? $value['styles'] : '';
 
 		$output = '';
@@ -958,6 +959,24 @@ class Dts_Settings_Field_Themes extends Dts_Settings_Field_Type{
 								__( 'Short description', 'demonstrator' ),
 								'<textarea name="'. $name . '[short_description]' .'" class="widefat">'. esc_textarea( $short_description ) .'</textarea>',
 								'col-sm-12'
+							);
+
+							$output .= $this->tRow( 
+								__( 'Status', 'demonstrator' ),
+								'<select name="'. $name . '[status]' .'" class="widefat">
+									<option value="published" '. selected( 'published', $status, false ) .'>
+										'. __( 'Published', 'demonstrator' ) .'
+									</option>
+									<option value="unlisted" '. selected( 'unlisted', $status, false ) .'>
+										'. __( 'Unlisted', 'demonstrator' ) .'
+									</option>
+								</select>
+								'
+							);
+
+							$output .= $this->tRow( 
+								__( 'Demo URL', 'demonstrator' ),
+								'<a class="demo_url_link" data-base-url="'. demonstrator_get_theme_url( '__noindex__' ) .'" href="'. demonstrator_get_theme_url( $theme_id ) .'" target="_blank">'. demonstrator_get_theme_url( $theme_id ) .'</a>'
 							);
 
 						$output .= '</div>';

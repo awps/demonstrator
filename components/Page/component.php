@@ -11,6 +11,8 @@ require_once DEMONSTRATOR_PATH .'components/Page/panel.php';
 ------------------------*/
 new Demonstrator\Endpoint;
 
+new Demonstrator\Redirect;
+
 /* Add settings fields
 ---------------------------*/
 add_action( 'demonstrator:init', function(){

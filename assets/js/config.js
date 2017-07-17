@@ -254,8 +254,7 @@
 					return _style_data;
 				},
 
-				// Determine if a theme contains a style id
-				// Return style data if exists or `false` if is not found.
+				// Get the name of selected theme
 				getThemeName: function( _theme_id ){
 					var _name = false,
 					_theme = demonstrator_themes[ _theme_id ];
@@ -265,6 +264,31 @@
 					}
 
 					return _name;
+				},
+
+				// Get the category of selected theme
+				getThemeCategory: function( _theme_id ){
+					var _category = false,
+					_theme = demonstrator_themes[ _theme_id ];
+
+					if( _theme !== undefined ){
+						if( _theme.category !== undefined ){
+							_category = _theme.category;
+						}
+					}
+
+					return _category;
+				},
+
+				// Get the category of selected theme
+				getThemeCategoryBadge: function( _theme_id ){
+					var _category = self.getThemeCategory( _theme_id );
+
+					if( _category ){
+						_category = '<span class="category-badge">'+ _category +'</span>';
+					}
+
+					return _category;
 				},
 
 				loadUrl: function( _theme_id, _style_id ){
@@ -316,7 +340,7 @@
 					var _title;
 
 					if( 'themes' === _for ){
-						_title = 'Theme: ' + self.getThemeName( _theme_id );
+						_title = 'Theme: ' + self.getThemeName( _theme_id ) + ' ' + self.getThemeCategoryBadge( _theme_id );
 					}
 					else if( 'styles' === _for ){
 						var _style = self.getThemeStyle( _theme_id, _style_id );

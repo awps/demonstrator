@@ -35,18 +35,16 @@ $themes = demonstrator_themes();
 
 	<title><?php echo get_option( 'blogname' ); ?></title>
 
-	<script type="text/javascript">
-		<?php 
-			// JSON Pretty print is required only for development
-			// if ( version_compare( PHP_VERSION, '5.4', '>' ) ) {
-			// 	echo 'var demonstrator_themes = '. json_encode( $themes, JSON_PRETTY_PRINT );
-			// }
-			// else{
-				echo 'var demonstrator_themes = '. json_encode( $themes );
-			// }
-			
-		?>
-	</script>
+	<script type="text/javascript"><?php 
+		// JSON Pretty print is required only for development
+		if ( version_compare( PHP_VERSION, '5.4', '>' ) && current_user_can('manage_options') ) {
+			echo PHP_EOL . 'var demonstrator_themes = '. json_encode( $themes, JSON_PRETTY_PRINT );
+		}
+		else{
+			echo 'var demonstrator_themes = '. json_encode( $themes );
+		}
+		
+	?></script>
 
 	<?php do_action( 'demonstrator_header' ); ?>
 </head>
@@ -62,7 +60,7 @@ $themes = demonstrator_themes();
 
 	if( $loaded_theme_exists ){
 		if( is_string( $themes[ $loaded_theme ]['demo_url'] ) ){
-			$iframe_url = esc_url_raw( $themes[ $loaded_theme ]['demo_url'] );
+			$iframe_url = esc_url( $themes[ $loaded_theme ]['demo_url'] );
 		}
 		elseif( is_array( $themes[ $loaded_theme ]['demo_url'] ) ){
 			$hidden_styles_menu = '';
@@ -81,7 +79,7 @@ $themes = demonstrator_themes();
 
 	// if we have a style url in query, load it and ignore everything else
 	if( !empty( $loaded_style ) ){
-		$iframe_url = esc_url_raw( $themes[ $loaded_theme ]['demo_url'][ $loaded_style ]['url'] );
+		$iframe_url = esc_url( $themes[ $loaded_theme ]['demo_url'][ $loaded_style ]['url'] );
 		$open_themes = '';
 		$open_styles = '';
 	}
@@ -94,10 +92,10 @@ $themes = demonstrator_themes();
 			<?php 
 				$logo_url = dts_get_option( 'demonstrator_options',  'brand_logo' );
 				$site_url = dts_get_option( 'demonstrator_options',  'brand_site_url', '' );
-				$open_tag = !empty( $site_url ) ? 'a href="'. esc_url_raw($site_url) .'" target="_blank" ' : 'span ';
+				$open_tag = !empty( $site_url ) ? 'a href="'. esc_url($site_url) .'" target="_blank" ' : 'span ';
 				$close_tag = !empty( $site_url ) ? 'a' : 'span';
 				if( !empty( $logo_url ) ) {
-					echo '<'. $open_tag .' class="logo"><img src="'. esc_url_raw( $logo_url ) .'" alt="" /></'. $close_tag .'>';
+					echo '<'. $open_tag .' class="logo"><img src="'. esc_url( $logo_url ) .'" alt="" /></'. $close_tag .'>';
 				} 
 			?>
 			<div id="menu-themes" class="menu-selector menu-themes <?php echo $open_themes; ?>">
@@ -124,7 +122,7 @@ $themes = demonstrator_themes();
 	</div>
 
 	<div class="preview-frame">
-		<iframe src="<?php echo esc_url_raw( $iframe_url ); ?>" id="preview"></iframe>
+		<iframe src="<?php echo esc_url( $iframe_url ); ?>" id="preview"></iframe>
 	</div>
 	
 </div>
@@ -143,14 +141,46 @@ $themes = demonstrator_themes();
 			foreach ($themes as $theme_id => $theme) {
 				if( empty( $theme['demo_url'] ) )
 					continue;
+				
+				$theme_status = !empty($theme['status']) ? sanitize_html_class( $theme['status'] ) : '';
+
+				/* If this theme is unlisted, do not show in themes list. 
+				   It's still possible to access it by direct URL.
+				   Also, make it listed for admins only.
+				--------------------------------------------------------------*/
+				if( 'unlisted' == $theme_status && ! current_user_can( 'manage_options' ) )
+					continue;
 
 				$url = is_string( $theme['demo_url'] ) ? $theme['demo_url'] : '#';
 				$active = ( $loaded_theme === $theme_id ) ? ' active' : '';
 				$total_styles = is_array( $theme['demo_url'] ) ? count( $theme['demo_url'] ) : 1;
 				
+				$price = '';
+				if( ! empty( $theme['price'] ) ){
+					$price = '<span class="l-badge l-price">'. esc_html( $theme['price'] ) .'</span>';
+				}
+				
+				$description = '';
+				if( ! empty( $theme['short_description'] ) ) {
+					$description = '<span class="description"><span>'. $theme['short_description'] .'</span></span>
+					<span class="description"><span>'. $theme['short_description'] .'</span></span>';
+				}
+				
+				$admin_notice_badge = '';
+				if( 'unlisted' == $theme_status ) {
+					$admin_notice_badge = '<span class="admin-notice-badge">'. __( 'This theme is unlisted!', 'powerblog' ) .'</span>';
+				}
+				elseif( 'private' == $theme_status ) {
+					$admin_notice_badge = '<span class="admin-notice-badge">'. __( 'This theme is private!', 'powerblog' ) .'</span>';
+				}
+				
 				echo '<div class="theme-item '. $theme_id . $active .'">
-					<a data-theme-id="'. $theme_id .'" href="'. esc_url_raw( $url ) .'" class="a-demo-item-link theme">
-						<div class="item-img"><img src="'. $theme[ 'img' ] .'" /></div>
+					<a data-theme-id="'. $theme_id .'" href="'. esc_url( $url ) .'" class="a-demo-item-link theme status-'. $theme_status .'">
+						<div class="item-img">
+							<img src="'. $theme[ 'img' ] .'" />
+							'. $description .'
+							'. $admin_notice_badge .'
+						</div>
 						<div class="label">
 							<div class="zg zg-2 zg-nowrap">
 								<div class="text-left">
@@ -164,6 +194,7 @@ $themes = demonstrator_themes();
 											$total_styles 
 										) . '
 									</span>
+									'. $price .'
 								</div>
 							</div>'
 						.'</div>

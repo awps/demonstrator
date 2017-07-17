@@ -11,16 +11,22 @@ It will create a bar on top that will make possible to switch between demos.
 
 ## Features: 
 
-- [x] The possibility to manage an unlimited number of themes directly from an admin page.
-- [x] The possibility to add an unlimited number of styles to each theme.
-- [x] Setup your own logo.
-- [x] Setup your own URL that will wrap the logo in a link.
-- [x] Display the themes and styles in a grid from 1 to 4 columns.
-- [x] Setup the usernames for Envato and CreativeMarket referal program.
-- [x] Short "purchase URL". The real purchase URL will be hidden in a local URL, so nobody will be able to access the purchase page without your referal ID.
-- [x] The frame is not closed, but instead is collapsed on top. This actually is a bonus because the visitors never lose the purchase URL and the acces to other themes/styles.
-- [x] Use the homepage and ignore the full site content, or setup a custom endpoint name.
+* The possibility to manage an unlimited number of themes directly from an admin page.
+* The possibility to add an unlimited number of styles to each theme.
+* Setup your own logo.
+* Setup your own URL that will wrap the logo in a link.
+* Display the themes and styles in a grid from 1 to 4 columns.
+* Setup the usernames for Envato and CreativeMarket referal program.
+* Short "purchase URL". The real purchase URL will be hidden in a local URL, so nobody will be able to access the purchase page without your referal ID.
+* The frame is not closed, but instead is collapsed on top. This actually is a bonus because the visitors never lose the purchase URL and the acces to other themes/styles.
+* Use the homepage and ignore the full site content, or setup a custom endpoint name.
+
+
+## Completed TODOs:
 - [x] Make themes and styles sortable( in admin panel ).
+- [x] Display the price and description.
+- [x] Make a theme unlisted. This is usefull when you have to show the demo, but you don;t have the purchase URL yet. Example: You submitted for review and the theme should be visible only to reviewer, but not to other users. This will be possible only by using a direct link.
+
 
 ## TODO:
 
@@ -32,10 +38,11 @@ It will create a bar on top that will make possible to switch between demos.
 - [ ] Display an icon that will allow to preview the the theme outside the iframe. An alternative to `collapse`.
 - [ ] Lazy-load items. Right now all themes and styles regardless if they are needed or not. It's needed to load to load each theme and style just when needed(probably using ajax). Ideas are welcome.
 - [ ] Add the possibility to customize the design of the switcher itself.
-- [ ] Create the styles for price and description.
-- [ ] Make a theme unlisted. This is usefull when you have to show the demo, but you don;t have the purchase URL yet. Example: You submitted for review and the theme should be visible only to reviewer, but not to other users. This will be possible only by using a direct link.
 - [ ] Do not hide the dropdown if no theme is selected.
 - [ ] Add the possibility to activate google analytics.
+- [ ] Multiple switchers. Right now, it's not possible to create multiple switchers, but it will be a great idea to make this possible. For example: Someone may need this, in case they sell themes on multiple marketplaces.
+- [ ] Anonymous URL. Allow to open a link in switcher frame even if it not registered under a theme style. This may be usefull for other use cases.
+- [ ] Private themes. Just like unlisted, but instead do not allow access to demo using direct link for user without administrative rights.
 
 ## Support & Donate: 
 

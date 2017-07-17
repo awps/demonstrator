@@ -118,6 +118,17 @@ body{
 		border-radius: 3px 3px 0 0;
 		cursor: pointer;
 
+		.category-badge{
+			display: inline-block;
+			padding: 3px 9px;
+			margin-top: -3px;
+			margin-bottom: -3px;
+			margin-left: 3px;
+			background: rgba(255,255,255,0.2);
+			font-weight: 400;
+			border-radius: 2px;
+		}
+
 		&:hover{
 			background-color: @menu_hover_bg;
 			> .dropdown{
@@ -139,6 +150,10 @@ body{
 		&.active{
 			background-color: rgba(255, 255, 255, 0.85);
 			color: #333;
+
+			.category-badge{
+				background:  rgba(0,0,0,0.2);
+			}
 		}
 
 		&.selected {
@@ -212,7 +227,7 @@ body{
 
 .demonstrator-dropdown{
 	display: none;
-	background-color: rgba(255, 255, 255, 0.9);
+	background-color: rgba(255, 255, 255, 0.96);
 	position: fixed;
 	left: 0;
 	right: 0;
@@ -250,11 +265,54 @@ body{
 				border: 1px solid #ccc;
 				width: 100%;
 				min-height: 100px;
+				position: relative;
+			}
+			.description-pointer{
+				position: absolute;
+				background-color: rgba(255, 255, 255, 0.9);
+				left: 10px;
+				bottom: 10px;
+				border-radius: 50%;
+				text-align: center;
+				font-size: 16px;
+				line-height: 16px;
+				padding: 3px;
+				width: 16px;
+				color: #666;
+			}
+			.description{
+				position: absolute;
+				top: 0;
+				right: 0;
+				bottom: 0;
+				left: 0;
+				border-radius: inherit;
+				background-color: rgba(255, 255, 255, 0.9);
+				z-index: 100;
+				font-weight: 400;
+				padding: 20px;
+				color: #555;
+				font-size: 16px;
+				opacity: 0;
+				.transition( all 0.2s );
+				text-align: center;
+				.display(flex);
+				.align-items( center );
+				> span{
+					max-width: 100%;
+					.flex-basis( 100% );
+				}
+				&.active{
+					color: #555;
+					opacity: 1;
+				}
 			}
 			img{
+				position: relative;
 				display: block;
 				margin: 0;
 				padding: 0;
+				z-index: 1;
 			}
 			.label{
 				margin: 15px 0;
@@ -283,26 +341,44 @@ body{
 					color: #555;
 					border: 0;
 					padding: 1px 5px;
+
+					&.wordpress{
+						background-color: #3498DB;
+						color: #fff;
+					}
+					&.html{
+						background-color: #62C462;
+						color: #fff;
+					}
+				}
+				&.l-price{
+					color: #CF000F;
 				}
 			}
 
+			&.status-unlisted{
+				.item-img{
+					border-color: #E3000E;
+					// background-color: #E3000E;
+				}
+			}
+			.admin-notice-badge{
+				position: absolute;
+				top: 8px;
+				left: 8px;
+				padding: 3px 7px;
+				border-radius: 2px;
+				background-color: #E3000E;
+				color: #fff;
+				font-weight: 400;
+				z-index: 99;
+			}
+			
 			&:hover{
 				color: @btn_bg;
 				.item-img{
 					border-color: @btn_bg;
 					background-color: lighten(@btn_bg, 30%);
-				}
-				.l-badge{
-					&.l-category{
-						&.wordpress{
-							background-color: #3498DB;
-							color: #fff;
-						}
-						&.html{
-							background-color: #62C462;
-							color: #fff;
-						}
-					}
 				}
 			}
 		}
