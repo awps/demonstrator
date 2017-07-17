@@ -14,7 +14,7 @@ class ThemeParser {
 	public function __construct( $theme_id, $theme ){
 		$this->theme_id     = $theme_id;
 		$this->theme        = $theme;
-		$this->purchase_url = !empty( $this->theme['purchase_url'] ) ?  $this->theme['purchase_url'] : '';
+		$this->purchase_url = !empty( $this->theme['purchase_url'] ) ?  esc_url( $this->theme['purchase_url'] ) : '';
 		$this->styles       = !empty( $this->theme['styles'] ) ?  $this->theme['styles'] : '';
 	}
 
@@ -71,7 +71,12 @@ class ThemeParser {
 	}
 
 	public function parseShortBuyUrl(){
-		$this->theme[ 'short_buy_url' ] = esc_url_raw( add_query_arg( 'buy', $this->theme_id, home_url() ) );
+		if( !empty( $this->theme['purchase_url'] ) ){
+			$this->theme[ 'short_buy_url' ] = esc_url_raw( add_query_arg( 'buy', $this->theme_id, home_url() ) );
+		}
+		else{
+			$this->theme[ 'short_buy_url' ] = false;
+		}
 
 		return $this;
 	}
@@ -82,6 +87,8 @@ class ThemeParser {
 		$this->doEnvatoReferal()->doCreativeMarketReferal();
 
 		$this->purchase_url = apply_filters( 'demonstrator_parse_purchase_url', $this->purchase_url );
+
+		$this->theme['purchase_url'] = $this->purchase_url;
 
 		return $this;
 	}
@@ -95,7 +102,7 @@ class ThemeParser {
 				stripos($this->purchase_url, 'codecanyon.net') !== false 
 			)
 		){
-			$this->theme['purchase_url'] = esc_url_raw( add_query_arg( array(
+			$this->theme['purchase_url'] = esc_url( add_query_arg( array(
 				'ref' => $envato_username
 			), $this->purchase_url ) );
 		}
@@ -113,7 +120,7 @@ class ThemeParser {
 				stripos($this->purchase_url, 'crtv.mk') !== false 
 			)
 		){
-			$this->theme['purchase_url'] = esc_url_raw( add_query_arg( array(
+			$this->theme['purchase_url'] = esc_url( add_query_arg( array(
 				'u' => $creativemarket_username
 			), $this->purchase_url ) );
 		}

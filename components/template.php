@@ -114,7 +114,7 @@ $themes = demonstrator_themes();
 			</span>
 		</div>
 		<div class="bar-right">
-			<a id="purchase" href="#" target="_blank" class="btn-buy">
+			<a id="purchase" href="#" target="_blank" class="btn-buy hidden">
 				<span class="the-icon flaticon-commerce"></span>
 				<span class="placeholder"><?php _e( 'Purchase', 'demonstrator' ) ?></span>
 			</a>
@@ -168,10 +168,10 @@ $themes = demonstrator_themes();
 				
 				$admin_notice_badge = '';
 				if( 'unlisted' == $theme_status ) {
-					$admin_notice_badge = '<span class="admin-notice-badge">'. __( 'This theme is unlisted!', 'powerblog' ) .'</span>';
+					$admin_notice_badge = '<span class="admin-notice-badge">'. __( 'Unlisted!', 'powerblog' ) .'</span>';
 				}
 				elseif( 'private' == $theme_status ) {
-					$admin_notice_badge = '<span class="admin-notice-badge">'. __( 'This theme is private!', 'powerblog' ) .'</span>';
+					$admin_notice_badge = '<span class="admin-notice-badge">'. __( 'Private!', 'powerblog' ) .'</span>';
 				}
 				
 				echo '<div class="theme-item '. $theme_id . $active .'">

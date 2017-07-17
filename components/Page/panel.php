@@ -970,6 +970,9 @@ class Dts_Settings_Field_Themes extends Dts_Settings_Field_Type{
 									<option value="unlisted" '. selected( 'unlisted', $status, false ) .'>
 										'. __( 'Unlisted', 'demonstrator' ) .'
 									</option>
+									<option value="private" '. selected( 'private', $status, false ) .'>
+										'. __( 'Private', 'demonstrator' ) .'
+									</option>
 								</select>
 								'
 							);

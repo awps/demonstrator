@@ -3,12 +3,21 @@ function demonstrator_themes(){
 	$themes = dts_get_option( 'demonstrator_options', 'items' );
 
 	if( !empty( $themes ) ){
-
 		$new_themes = $themes;
-		
+
 		foreach ($themes as $theme_id => $theme) {
 			$theme = apply_filters( 'demonstrator_before_theme_parse', $theme, $theme_id );
-
+			
+			if( 'private' == $theme['status'] && ! current_user_can( 'manage_options' ) ) {
+				unset( $new_themes[ $theme_id ] );
+				continue;
+			}
+			
+			// If he name is not set, assign the ID
+			if( empty( $theme['label'] ) ) {
+				$theme['label'] = $theme_id;
+			}
+			
 			$parser = new Demonstrator\ThemeParser( $theme_id, $theme );
 
 			$parser->parsePurchaseUrl()->parseShortBuyUrl()->filterStyles()->parseDemoUrl();
@@ -17,7 +26,6 @@ function demonstrator_themes(){
 		}
 
 		$themes = $new_themes;
-
 	}
 
 	return apply_filters( 'demonstrator_themes', $themes );

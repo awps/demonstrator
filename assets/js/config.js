@@ -45,7 +45,7 @@
 					var _theme_id = new Uri( window.location.href ).getQueryParamValue( 'theme' );
 					var _style_id = new Uri( window.location.href ).getQueryParamValue( 'style' );
 
-					if( _theme_id ){
+					if( _theme_id && demonstrator_themes[ _theme_id ] ){
 						self.setMenuLabel( 'themes', _theme_id );
 						
 						if( _style_id ){
@@ -326,6 +326,7 @@
 						var _dd_selector = $( '.demonstrator-dropdown' );
 						
 						if ( 
+							$('#menu-themes').hasClass( 'selected' ) &&
 							// ! _menu_selector.is( event.target ) && 
 							// _menu_selector.has( event.target ).length === 0 && 
 							! _dd_selector.is( event.target ) && 
@@ -375,6 +376,8 @@
 
 				toggleBar: function(){
 					$('#toggle-bar').on( 'click', function(){
+						if( ! $('#menu-themes').hasClass( 'selected' ) )
+							return;
 					
 						// Open bar
 						if( $('#demonstrator-bar').hasClass('top-bar-closed') ){
