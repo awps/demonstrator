@@ -1,6 +1,6 @@
 ## Description
 
-A theme switcher perfect to connect different site demos.
+More than a theme switcher!
 
 This is a theme switcher designed for **theme developers**. When installed, the current site will become blank, the current theme will be ignored and the site will become a placeholder for an iframe where will be loaded different site addresses. 
 It will create a bar on top that will make possible to switch between demos.

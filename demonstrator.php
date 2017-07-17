@@ -2,7 +2,7 @@
 /* 
  * Plugin Name: Demonstrator
  * Plugin URI:  http://zerowp.com/demonstrator
- * Description: A theme switcher that should be used to connect different site demos.
+ * Description: More than a theme switcher!
  * Author:      ZeroWP Team
  * Author URI:  http://zerowp.com/
  * License:     GPL-2.0+

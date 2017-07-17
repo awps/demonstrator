@@ -8,7 +8,7 @@ Stable tag: 1.0
 License: GPL-2.0+
 License URI: http://www.gnu.org/licenses/gpl-2.0.txt
 
-A theme switcher perfect to connect different site demos.
+More than a theme switcher!
 
 == Description ==
 
