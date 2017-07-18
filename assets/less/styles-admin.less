@@ -39,6 +39,7 @@
 // Repeatable items
 // ----------------------------------------------------------------------------
 .themes-repeatable-block{
+	margin-bottom: 10px;
 	&.smk_accordion .acc_section {
 		margin: -1px 0 0 0;
 		> div:nth-child(1){
@@ -150,30 +151,46 @@
 }
 
 .form-repeatable-button{
-	display: inline-block;
+	display: block;
 	padding: 9px 18px;
 	border-radius: 2px;
-	background: @color-scheme-primary;
+	color: @color-scheme-primary;
+	background-color: #fff;
+	border: 1px dashed @color-scheme-primary;
 	text-transform: uppercase;
 	text-align: center;
 	font-size: 12px;
-	color: #fff;
 	position: relative;
 	margin-bottom: 20;
 	cursor: pointer;
+	font-weight: 700;
 	&:hover{
-		background: darken(@color-scheme-primary, 10%);
+		background: #E8FFFF;
+		// color: #fff;
 	}
 
 	&.simple{
+		display: inline-block;
 		font-weight: 700;
 		color: @color-scheme-primary;
 		background-color: #E7E7E7;
 		padding: 5px 12px;
 		margin-bottom: 15px;
+		border: 0;
 		&:hover{
 			background-color: @color-scheme-primary;
 			color: #fff;
+		}
+	}
+}
+
+.form-table{
+	tr.full-row{
+		th,
+		td{
+			width: 100%;
+			display: block;
+			padding: 0;
 		}
 	}
 }

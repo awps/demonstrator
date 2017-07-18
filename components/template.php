@@ -29,11 +29,17 @@
 |                                                                             |
 |=============================================================================|
 -->
+
 <?php 
-$themes = demonstrator_themes();
+
+	$switcher_id = $GLOBALS[ 'demonstrator_current_query_var' ];
+	$tpl         = new Demonstrator\Switcher( $switcher_id );
+	$themes      = $tpl->getThemes();
+	$logo_url    = $tpl->getLogoUrl();
+	$site_url    = $tpl->getSiteUrl();
 ?>
 
-	<title><?php echo get_option( 'blogname' ); ?></title>
+	<title><?php echo $tpl->getSwitcherTitle(); ?></title>
 
 	<script type="text/javascript"><?php 
 		// JSON Pretty print is required only for development
@@ -90,8 +96,6 @@ $themes = demonstrator_themes();
 	<div id="demonstrator-bar" class="top-bar">
 		<div class="bar-left">
 			<?php 
-				$logo_url = dts_get_option( 'demonstrator_options',  'brand_logo' );
-				$site_url = dts_get_option( 'demonstrator_options',  'brand_site_url', '' );
 				$open_tag = !empty( $site_url ) ? 'a href="'. esc_url($site_url) .'" target="_blank" ' : 'span ';
 				$close_tag = !empty( $site_url ) ? 'a' : 'span';
 				if( !empty( $logo_url ) ) {
@@ -127,16 +131,11 @@ $themes = demonstrator_themes();
 	
 </div>
 
-<?php 
-	$theme_columns = dts_get_option( 'demonstrator_options',  'theme_columns', 4 );
-	$style_columns = dts_get_option( 'demonstrator_options',  'style_columns', 4 );
-?>
-
 <?php if( !empty( $themes ) ) : ?> 
 
 <div class="demonstrator-dropdown themes <?php echo $open_themes; ?>">
 	<div class="dd-container">
-		<div class="zg <?php echo demonstrator_get_columns_class( $theme_columns ); ?>">
+		<div class="zg <?php echo $tpl->getThemeColumnsClass(); ?>">
 			<?php 
 			foreach ($themes as $theme_id => $theme) {
 				if( empty( $theme['demo_url'] ) )
@@ -209,7 +208,7 @@ $themes = demonstrator_themes();
 
 <div class="demonstrator-dropdown styles <?php echo $open_styles; ?>">
 	<div class="dd-container">
-		<div class="zg <?php echo demonstrator_get_columns_class( $style_columns ); ?>">
+		<div class="zg <?php echo $tpl->getStyleColumnsClass(); ?>">
 			<?php 
 			foreach ($themes as $theme_id => $theme) {
 				if( empty( $theme['demo_url'] ) )

@@ -3,6 +3,8 @@ namespace Demonstrator;
 
 class ThemeParser {
 	
+	protected  $switcher_id;
+
 	protected $theme_id;
 
 	protected $theme;
@@ -11,7 +13,8 @@ class ThemeParser {
 
 	protected $styles;
 
-	public function __construct( $theme_id, $theme ){
+	public function __construct( $switcher_id, $theme_id, $theme ){
+		$this->switcher_id  = $switcher_id;
 		$this->theme_id     = $theme_id;
 		$this->theme        = $theme;
 		$this->purchase_url = !empty( $this->theme['purchase_url'] ) ?  esc_url( $this->theme['purchase_url'] ) : '';
@@ -72,7 +75,12 @@ class ThemeParser {
 
 	public function parseShortBuyUrl(){
 		if( !empty( $this->theme['purchase_url'] ) ){
-			$this->theme[ 'short_buy_url' ] = esc_url_raw( add_query_arg( 'buy', $this->theme_id, home_url() ) );
+			$this->theme[ 'short_buy_url' ] = esc_url_raw( 
+				add_query_arg( 
+					array( 'sid' => $this->switcher_id, 'buy' => $this->theme_id ), 
+					home_url() 
+				) 
+			);
 		}
 		else{
 			$this->theme[ 'short_buy_url' ] = false;

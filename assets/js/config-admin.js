@@ -166,17 +166,26 @@
 					$( '.themes-repeatable-block' ).on( 'keyup change', '.this-section-theme-id-field', function(){
 						var thisval = $(this).val(),
 						base_demo_url_link = $(this).parents('.acc_section').find('.demo_url_link'),
-						base_demo_url = base_demo_url_link.data('base-url'),
-						demo_url = base_demo_url.replace( '__noindex__', thisval );
-
-						base_demo_url_link.attr( 'href', demo_url ).text( demo_url );
+						base_demo_url = base_demo_url_link.data('base-url');
+						
+						if( base_demo_url ){
+							var demo_url = base_demo_url.replace( '__noindex__', thisval );
+							base_demo_url_link.attr( 'href', demo_url ).text( demo_url );
+						}
 					});
 
 					// Delete section
 					$('.themes-repeatable-block').on( 'click', '.delete-theme', function( event ){
 						event.preventDefault();
-						var lists = $(this).parents('.themes-repeatable-block').children();
-						if( lists.length > 1 ){
+
+						var _block = $(this).parents('.themes-repeatable-block');
+						var minimum_sections = parseInt( _block.data('minimum-sections') , 10 );
+						var lists = _block.children().not('.sfa-theme-noindex');
+
+						if( lists.length > minimum_sections ){
+							if( ! confirm( 'Are you sure that you want to delete this?' ) )
+								return;
+
 							$(this).parents('.acc_section').slideUp(150, false, function(){
 								$(this).remove();
 							});
@@ -206,10 +215,12 @@
 						});
 
 						var base_demo_url_link = cloned.find('.demo_url_link'),
-						base_demo_url = base_demo_url_link.data('base-url'),
-						demo_url = base_demo_url.replace( '__noindex__', array_key );
+						base_demo_url = base_demo_url_link.data('base-url');
 
-						base_demo_url_link.attr( 'href', demo_url ).text( demo_url );
+						if( base_demo_url ){
+							var demo_url = base_demo_url.replace( '__noindex__', array_key );
+							base_demo_url_link.attr( 'href', demo_url ).text( demo_url );
+						}
 					});
 
 				},
@@ -265,7 +276,7 @@
 						axis: "y",
 						tolerance: "pointer",
 						handle: ".acc_head",
-						cancel: '.delete-theme',
+						cancel: '.cancel-drag',
 						start: function( event, ui ) {
 							self.closeAllAccordionSections();
 						}

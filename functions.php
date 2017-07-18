@@ -1,6 +1,40 @@
 <?php 
-function demonstrator_themes(){
-	$themes = dts_get_option( 'demonstrator_options', 'items' );
+/**
+ * Get a option from DB
+ *
+ * Get the saved options from DB or a single option from the multidimensional array.
+ *
+ * @param string $panel_id The registered panel. It's the ID registered with Dts_Settings_Panel( $id, ... )
+ * @param string $option_name The field ID. It's the ID registered with $panel->addField( $id, ... )
+ * @param string $default Default value to show if the option is not saved in DB.
+ * @return mixed
+ */
+function dts_get_option( $panel_id, $option_name = false, $default = false ){
+	$options = get_option( $panel_id );
+
+	// If is the user does not indicate the option name to retrieve, return all options.
+	if( empty($option_name) ){
+		return $options;
+	}
+
+	// If the option is saved return its value.
+	if( isset( $options[ $option_name ] ) ){
+		return $options[ $option_name ];
+	}
+
+	// If the option is not saved yet and a default is set by user return it.
+	elseif( $default !== false ){
+		return $default;
+	}
+
+	// If all above fails, return false. This means, the option is not saved in DB.
+	else{
+		return false;
+	}
+}
+
+function demonstrator_themes( $switcher_id ){
+	$themes = dts_get_option( 'demonstrator_instance_' . $switcher_id, 'items' );
 
 	if( !empty( $themes ) ){
 		$new_themes = $themes;
@@ -18,7 +52,7 @@ function demonstrator_themes(){
 				$theme['label'] = $theme_id;
 			}
 			
-			$parser = new Demonstrator\ThemeParser( $theme_id, $theme );
+			$parser = new Demonstrator\ThemeParser(  $switcher_id, $theme_id, $theme );
 
 			$parser->parsePurchaseUrl()->parseShortBuyUrl()->filterStyles()->parseDemoUrl();
 
@@ -29,23 +63,6 @@ function demonstrator_themes(){
 	}
 
 	return apply_filters( 'demonstrator_themes', $themes );
-}
-
-function demonstrator_get_columns_class( $theme_columns ){
-	if( 3 == $theme_columns ){
-		$class = 'zg-sm-3 zg-xs-2';
-	}
-	else if( 2 == $theme_columns ){
-		$class = 'zg-xs-2';
-	}
-	else if( 1 == $theme_columns ){
-		$class = 'zg-1';
-	}
-	else{
-		$class = 'zg-md-4 zg-sm-3 zg-xs-2';
-	}
-
-	return $class;
 }
 
 function demonstrator_get_endpoint_url( $endpoint, $value = '', $permalink = '' ){
@@ -71,12 +88,11 @@ function demonstrator_get_endpoint_url( $endpoint, $value = '', $permalink = '' 
 	return apply_filters( 'demonstrator_get_endpoint_url', $url, $endpoint, $value, $permalink );
 }
 
-function demonstrator_get_theme_url( $theme_id ){
-	$endpoint = get_option( 'demonstrator_permalink_slug', false );
-
+function demonstrator_get_theme_url( $switcher_id, $theme_id ){
 	$switcher_url = home_url();
-	if( !empty( $ndpoint ) ){
-		$switcher_url = demonstrator_get_endpoint_url( $endpoint, '', $switcher_url );
+
+	if( !empty( $switcher_id ) ){
+		$switcher_url = demonstrator_get_endpoint_url( $switcher_id, '', $switcher_url );
 	}
 
 	return apply_filters( 

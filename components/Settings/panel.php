@@ -61,7 +61,7 @@ class Dts_Settings_Panel_Add_Field{
 		$this->settings    = $settings;
 
 		add_filter( $this->panel_id . '_panel_fields', array($this, 'add'), $priority );
-		add_action( $section_id. '_dts_fields', array($this, 'render'), $priority );
+		add_action( $this->panel_id .'_'. $section_id . '_dts_fields', array($this, 'render'), $priority );
 	}
 
 	public function getSettings(){
@@ -99,9 +99,10 @@ class Dts_Settings_Panel_Add_Field{
 
 	public function render(){
 		$s = $this->getSettings();
+		$full_row  = !empty($s['full_row']) ? 'full-row' : '';
 		$description  = !empty($s['description']) ? '<p class="description">'. $s['description'] .'</p>' : '';
 
-		echo '<tr id="'. $this->panel_id .'_'. $this->field_id .'">
+		echo '<tr id="'. $this->panel_id .'_'. $this->field_id .'" class="'. $full_row .'">
 			<th scope="row">'. $s['title'] .'</th>
 			<td>'. $this->getField() . $description .'</td>
 		</tr>';
@@ -125,6 +126,7 @@ class Dts_Settings_Panel_Init{
 		add_action( 'admin_init', array( $this, 'panelInit' ) );
 		add_action( 'admin_bar_menu', array( $this, 'toolbarLink'), 999 );
 		add_action( 'admin_enqueue_scripts', array( $this, 'adminEnqueue') );
+		add_action( 'init', array( $this, 'flushRewriteRules' ) );
 	}
 
 	public function adminEnqueue(){
@@ -202,13 +204,25 @@ class Dts_Settings_Panel_Init{
 	public function menu(){
 		$sett = $this->getSettings();
 
-		add_menu_page(
-			$this->title,
-			$this->title,
-			$sett['capability'],
-			$this->id,
-			array($this, 'panelPage')
-		);
+		if( ! isset( $sett['parent_slug'] ) ) {
+			add_menu_page(
+				$this->title,
+				$this->title,
+				$sett['capability'],
+				$this->id,
+				array($this, 'panelPage')
+			);
+		}
+		else{
+			add_submenu_page(
+				$sett['parent_slug'],
+				$this->title,
+				$this->title,
+				$sett['capability'],
+				$this->id,
+				array($this, 'panelPage')
+			);
+		}
 	}
 
 	/**
@@ -220,6 +234,16 @@ class Dts_Settings_Panel_Init{
 	 */
 	public function panelInit() {
 		register_setting( $this->id, $this->id, array($this, 'sanitize') );
+	}
+
+	/**
+	 * Flush rewrite rules
+	 *
+	 */
+	public function flushRewriteRules() {
+		if( is_admin() && !empty( $_GET[ 'page' ] ) && $_GET[ 'page' ] === $this->id && isset($_POST) ){
+			flush_rewrite_rules( true );
+		}
 	}
 
 	/**
@@ -329,7 +353,7 @@ class Dts_Settings_Panel_Init{
 		foreach ($this->sections() as $section_id => $section_settings) {
 
 			// If the section has fields show it otherwise hide.
-			if( has_action( $section_id. '_dts_fields' ) ){
+			if( has_action( $this->id .'_'. $section_id . '_dts_fields' ) ){
 
 				// Section title and description
 				$this->sectionTitle( $section_settings['title'] );
@@ -337,7 +361,7 @@ class Dts_Settings_Panel_Init{
 
 				// Show the fields for this section
 				echo '<table class="form-table"><tbody>';
-					do_action( $section_id. '_dts_fields' );
+					do_action( $this->id .'_'. $section_id . '_dts_fields' );
 				echo '</tbody></table>';
 			}
 		}
@@ -853,6 +877,8 @@ Themes
 */
 class Dts_Settings_Field_Themes extends Dts_Settings_Field_Type{
 
+	protected $minumum_sections = 0;
+
 	public function defaultSettings(){
 		// return array(
 		// );
@@ -862,25 +888,43 @@ class Dts_Settings_Field_Themes extends Dts_Settings_Field_Type{
 		$value = $this->getFieldValue();
 		$output = '';
 
-		$output .= '<ul class="demonstrator_themes themes-repeatable-block">';
+		$output .= '<ul class="demonstrator_themes themes-repeatable-block" data-minimum-sections="'. absint($this->minumum_sections) .'">';
 			
-			$output .= $this->getSingleTheme( '__noindex__', array() );
+			$output .= $this->getSingleItem( '__noindex__', array() );
 			
 			if( ! empty( $value ) ){
 				foreach ($value as $theme_id => $theme) {
-					$output .= $this->getSingleTheme( $theme_id, $theme );
+					$output .= $this->getSingleItem( $theme_id, $theme );
 				}
+			}
+			elseif( $this->minumum_sections > 0 ){
+				$output .= $this->getSingleItem( uniqid(), array() );
 			}
 			
 
 		$output .= '</ul>';
 
-		$output .= '<span class="demonstrator_add_theme form-repeatable-button">'. __( 'Add theme', 'demonstrator' ) .'</span>';
+		$output .= '<span class="demonstrator_add_theme form-repeatable-button">'. $this->labelAddNew() .'</span>';
 
 		return $output;
 	}
 
-	public function getSingleTheme( $theme_id, $value ){
+	public function labelAddNew(){
+		return __( 'Add theme', 'demonstrator' );
+	}
+
+	public function sectionHeader( $label, $theme_id, $category ){
+		return '
+			<span class="section-theme-title">'. $label .'</span>
+			<span class="badge section-theme-id">'. $theme_id .'</span>
+			<span class="badge section-theme-category">'. $category .'</span>
+			<span class="badge delete-theme cancel-drag" title="'. __('Delete', 'demonstrator') .'">
+				<i class="dashicons dashicons-trash"></i>
+			</span>
+		';
+	}
+
+	public function fields( $theme_id, $value ){
 		$name              = $this->getFieldName() . '['. $theme_id .']';
 		$label             = !empty( $value['label'] ) ? $value['label'] : '';
 		$img               = !empty( $value['img'] ) ? $value['img'] : '';
@@ -893,125 +937,134 @@ class Dts_Settings_Field_Themes extends Dts_Settings_Field_Type{
 		$styles            = !empty( $value['styles'] ) ? $value['styles'] : '';
 
 		$output = '';
+		
+		$output .= '<div class="col-sm-3">';
+
+			$output .= $this->tRow( 
+				__( 'Image', 'demonstrator' ),
+				$this->getUploader( $name . '[img]', $img )
+			);
+
+		$output .= '</div>';
+		
+	
+		$output .= '<div class="col-sm-9">';
+			$output .= '<div class="zg">';
+			
+				$output .= $this->tRow( 
+					__( 'ID', 'demonstrator' ),
+					'<input name="'. $name . '[id]' .'" type="text" class="widefat this-section-theme-id-field" value="'. $theme_id .'" />',
+					'col-sm-3'
+				);
+
+				$output .= $this->tRow( 
+					__( 'Name', 'demonstrator' ),
+					'<input name="'. $name . '[label]' .'" type="text" class="widefat this-section-theme-title-field" value="'. $label .'" />',
+					'col-sm-3'
+				);
+
+				$output .= $this->tRow( 
+					__( 'Category', 'demonstrator' ),
+					'<input name="'. $name . '[category]' .'" type="text" class="widefat this-section-theme-category-field" value="'. $category .'" />',
+					'col-sm-3'
+				);
+
+				$output .= $this->tRow( 
+					__( 'Price', 'demonstrator' ),
+					'<input name="'. $name . '[price]' .'" type="text" class="widefat" value="'. $price .'" />',
+					'col-sm-3'
+				);
+
+				$output .= $this->tRow( 
+					__( 'Purchase URL', 'demonstrator' ),
+					'<input name="'. $name . '[purchase_url]' .'" type="text" class="widefat" value="'. $purchase_url .'" />'
+				);
+
+				// $output .= $this->tRow( 
+				// 	__( 'Demo URL', 'demonstrator' ),
+				// 	'<input name="'. $name . '[demo_url]' .'" type="text" class="widefat" value="'. $demo_url .'" />'
+				// );
+
+				$output .= $this->tRow( 
+					__( 'Short description', 'demonstrator' ),
+					'<textarea name="'. $name . '[short_description]' .'" class="widefat">'. esc_textarea( $short_description ) .'</textarea>',
+					'col-sm-12'
+				);
+
+				$output .= $this->tRow( 
+					__( 'Status', 'demonstrator' ),
+					'<select name="'. $name . '[status]' .'" class="widefat">
+						<option value="published" '. selected( 'published', $status, false ) .'>
+							'. __( 'Published', 'demonstrator' ) .'
+						</option>
+						<option value="unlisted" '. selected( 'unlisted', $status, false ) .'>
+							'. __( 'Unlisted', 'demonstrator' ) .'
+						</option>
+						<option value="private" '. selected( 'private', $status, false ) .'>
+							'. __( 'Private', 'demonstrator' ) .'
+						</option>
+					</select>
+					'
+				);
+
+				$switcher_id = !empty( $_GET['page'] ) ? str_replace( 'demonstrator_instance_', '', $_GET['page'] ) : false;
+
+				if( $switcher_id ){
+					$output .= $this->tRow( 
+						__( 'Demo URL', 'demonstrator' ),
+						'<a class="demo_url_link" data-base-url="'. demonstrator_get_theme_url( $switcher_id, '__noindex__' ) .'" href="'. demonstrator_get_theme_url( $switcher_id, $theme_id ) .'" target="_blank">'. demonstrator_get_theme_url( $switcher_id, $theme_id ) .'</a>'
+					);
+				}
+
+			$output .= '</div>';
+		$output .= '</div>';
+		
+		/* Styles --------------*/
+		$output .= '<div class="col-12">';
+			$output .= '<div class="zg demonstrator-styles-group">';
+
+				$output .= '<div class="demonstrator-styles-header col-12">'. __( 'Styles', 'demonstrator' ) .'</div>';
+				$output .= '<ul class="demonstrator_styles demonstrator-styles-list col-12">';
+					
+					$output .= $this->getSingleStyle( $theme_id, '__stylenoindex__', array() );
+					
+					if( ! empty( $styles ) ){
+						foreach ($styles as $style_id => $style) {
+							$output .= $this->getSingleStyle( $theme_id, $style_id, $style );
+						}
+					}
+					
+
+				$output .= '</ul>';
+
+				$output .= '<div class="col-12">';
+					$output .= '<span class="demonstrator_add_style form-repeatable-button simple">'. __( 'Add style', 'demonstrator' ) .'</span>';
+				$output .= '</div>';
+
+			$output .= '</div>';
+		$output .= '</div>';
+		/* / Styles --------------*/
+
+		return $output;
+	}
+
+	public function getSingleItem( $theme_id, $value ){
+		$label             = !empty( $value['label'] ) ? $value['label'] : '';
+		$category          = !empty( $value['category'] ) ? $value['category'] : '';
+		
+		$output = '';
 
 		$list_class = ( '__noindex__' == $theme_id ) ? 'sfa-theme-noindex' : '';
 
 		$output .= '<li class="'. $list_class .'">';
 			
-			$output .= '<div>
-				<span class="section-theme-title">'. $label .'</span>
-				<span class="badge section-theme-id">'. $theme_id .'</span>
-				<span class="badge section-theme-category">'. $category .'</span>
-				<span class="badge delete-theme" title="'. __('Delete', 'demonstrator') .'"><i class="dashicons dashicons-trash"></i></span>
-			</div>'; // nth 1
+			$output .= '<div>'. $this->sectionHeader( $label, $theme_id, $category ) .'</div>'; // nth 1
 			
 			$output .= '<div class="wp-clearfix">';
 				$output .= '<div class="zg">';
-					
-					$output .= '<div class="col-sm-3">';
 
-						$output .= $this->tRow( 
-							__( 'Image', 'demonstrator' ),
-							$this->getUploader( $name . '[img]', $img )
-						);
-
-					$output .= '</div>';
-					
+					$output .= $this->fields( $theme_id, $value );
 				
-					$output .= '<div class="col-sm-9">';
-						$output .= '<div class="zg">';
-						
-							$output .= $this->tRow( 
-								__( 'ID', 'demonstrator' ),
-								'<input name="'. $name . '[id]' .'" type="text" class="widefat this-section-theme-id-field" value="'. $theme_id .'" />',
-								'col-sm-3'
-							);
-
-							$output .= $this->tRow( 
-								__( 'Name', 'demonstrator' ),
-								'<input name="'. $name . '[label]' .'" type="text" class="widefat this-section-theme-title-field" value="'. $label .'" />',
-								'col-sm-3'
-							);
-
-							$output .= $this->tRow( 
-								__( 'Category', 'demonstrator' ),
-								'<input name="'. $name . '[category]' .'" type="text" class="widefat this-section-theme-category-field" value="'. $category .'" />',
-								'col-sm-3'
-							);
-
-							$output .= $this->tRow( 
-								__( 'Price', 'demonstrator' ),
-								'<input name="'. $name . '[price]' .'" type="text" class="widefat" value="'. $price .'" />',
-								'col-sm-3'
-							);
-
-							$output .= $this->tRow( 
-								__( 'Purchase URL', 'demonstrator' ),
-								'<input name="'. $name . '[purchase_url]' .'" type="text" class="widefat" value="'. $purchase_url .'" />'
-							);
-
-							// $output .= $this->tRow( 
-							// 	__( 'Demo URL', 'demonstrator' ),
-							// 	'<input name="'. $name . '[demo_url]' .'" type="text" class="widefat" value="'. $demo_url .'" />'
-							// );
-
-							$output .= $this->tRow( 
-								__( 'Short description', 'demonstrator' ),
-								'<textarea name="'. $name . '[short_description]' .'" class="widefat">'. esc_textarea( $short_description ) .'</textarea>',
-								'col-sm-12'
-							);
-
-							$output .= $this->tRow( 
-								__( 'Status', 'demonstrator' ),
-								'<select name="'. $name . '[status]' .'" class="widefat">
-									<option value="published" '. selected( 'published', $status, false ) .'>
-										'. __( 'Published', 'demonstrator' ) .'
-									</option>
-									<option value="unlisted" '. selected( 'unlisted', $status, false ) .'>
-										'. __( 'Unlisted', 'demonstrator' ) .'
-									</option>
-									<option value="private" '. selected( 'private', $status, false ) .'>
-										'. __( 'Private', 'demonstrator' ) .'
-									</option>
-								</select>
-								'
-							);
-
-							$output .= $this->tRow( 
-								__( 'Demo URL', 'demonstrator' ),
-								'<a class="demo_url_link" data-base-url="'. demonstrator_get_theme_url( '__noindex__' ) .'" href="'. demonstrator_get_theme_url( $theme_id ) .'" target="_blank">'. demonstrator_get_theme_url( $theme_id ) .'</a>'
-							);
-
-						$output .= '</div>';
-					$output .= '</div>';
-					
-					/* Styles --------------*/
-					$output .= '<div class="col-12">';
-						$output .= '<div class="zg demonstrator-styles-group">';
-
-							$output .= '<div class="demonstrator-styles-header col-12">'. __( 'Styles', 'demonstrator' ) .'</div>';
-							$output .= '<ul class="demonstrator_styles demonstrator-styles-list col-12">';
-								
-								$output .= $this->getSingleStyle( $theme_id, '__stylenoindex__', array() );
-								
-								if( ! empty( $styles ) ){
-									foreach ($styles as $style_id => $style) {
-										$output .= $this->getSingleStyle( $theme_id, $style_id, $style );
-									}
-								}
-								
-
-							$output .= '</ul>';
-
-							$output .= '<div class="col-12">';
-								$output .= '<span class="demonstrator_add_style form-repeatable-button simple">'. __( 'Add style', 'demonstrator' ) .'</span>';
-							$output .= '</div>';
-
-						$output .= '</div>';
-					$output .= '</div>';
-					/* / Styles --------------*/
-
-
 				$output .= '</div>'; // .zg
 			$output .= '</div>'; // .wp-clearfix
 		$output .= '</li>';
@@ -1149,38 +1202,162 @@ class Dts_Settings_Field_Themes extends Dts_Settings_Field_Type{
 
 }
 dts_register_field_type( 'themes', 'Dts_Settings_Field_Themes' );
+/*
+-------------------------------------------------------------------------------
+Themes
+-------------------------------------------------------------------------------
+*/
+class Dts_Settings_Field_Switchers extends Dts_Settings_Field_Themes{
 
+	protected $minumum_sections = 1;
 
-/**
- * Get a option from DB
- *
- * Get the saved options from DB or a single option from the multidimensional array.
- *
- * @param string $panel_id The registered panel. It's the ID registered with Dts_Settings_Panel( $id, ... )
- * @param string $option_name The field ID. It's the ID registered with $panel->addField( $id, ... )
- * @param string $default Default value to show if the option is not saved in DB.
- * @return mixed
- */
-function dts_get_option( $panel_id, $option_name = false, $default = false ){
-	$options = get_option( $panel_id );
-
-	// If is the user does not indicate the option name to retrieve, return all options.
-	if( empty($option_name) ){
-		return $options;
+	public function labelAddNew(){
+		return __( 'Add switcher', 'demonstrator' );
 	}
 
-	// If the option is saved return its value.
-	if( isset( $options[ $option_name ] ) ){
-		return $options[ $option_name ];
+	public function sectionHeader( $label, $switcher_id, $category ){
+		return '
+			<span class="section-theme-title">'. $label .'</span>
+			<span class="badge section-theme-id">'. $switcher_id .'</span>
+			<span class="badge delete-theme cancel-drag" title="'. __('Delete', 'demonstrator') .'">
+				<i class="dashicons dashicons-trash"></i>
+			</span>
+		';
 	}
 
-	// If the option is not saved yet and a default is set by user return it.
-	elseif( $default !== false ){
-		return $default;
+	public function fields( $switcher_id, $value ){
+		$name                    = $this->getFieldName() . '['. $switcher_id .']';
+		$label                   = !empty( $value['label'] ) ? $value['label'] : '';
+		$switcher_logo           = !empty( $value['switcher_logo'] ) ? $value['switcher_logo'] : '';
+		$site_url                = !empty( $value['site_url'] ) ? $value['site_url'] : '';
+		$envato_username         = !empty( $value['envato_username'] ) ? $value['envato_username'] : '';
+		$creativemarket_username = !empty( $value['creativemarket_username'] ) ? $value['creativemarket_username'] : '';
+		
+		$themes_grid             = !empty( $value['themes_grid'] ) ? absint( $value['themes_grid'] ) : 3;
+		$themes_grid             = ( $themes_grid > 0 && $themes_grid < 5 ) ? $themes_grid : 3;
+		$styles_grid             = !empty( $value['styles_grid'] ) ? absint( $value['styles_grid'] ) : 3;
+		$styles_grid             = ( $styles_grid > 0 && $styles_grid < 5 ) ? $styles_grid : 3;
+
+		$output = '';
+		
+		$output .= '<div class="col-sm-3">';
+
+			$output .= $this->tRow( 
+				__( 'Switcher logo', 'demonstrator' ),
+				$this->getUploader( $name . '[switcher_logo]', $switcher_logo )
+			);
+
+		$output .= '</div>';
+		
+	
+		$output .= '<div class="col-sm-9">';
+			$output .= '<div class="zg">';
+			
+				$output .= $this->tRow( 
+					__( 'Endpoint ID', 'demonstrator' ),
+					'<input name="'. $name . '[id]' .'" type="text" class="widefat this-section-theme-id-field" value="'. $switcher_id .'" />',
+					'col-sm-3'
+				);
+
+				$output .= $this->tRow( 
+					__( 'Label', 'demonstrator' ),
+					'<input name="'. $name . '[label]' .'" type="text" class="widefat this-section-theme-title-field" value="'. $label .'" />',
+					'col-sm-3'
+				);
+
+				$output .= $this->tRow( 
+					__( 'Your site URL', 'demonstrator' ),
+					'<input name="'. $name . '[site_url]' .'" type="text" class="widefat" value="'. $site_url .'" />',
+					'col-sm-6'
+				);
+
+				$output .= $this->tRow( 
+					__( 'Themes grid', 'demonstrator' ),
+					'
+					<label>
+						<input type="radio" value="4" '. checked( '4', $themes_grid, false ) .' name="'. $name . '[themes_grid]' .'">
+						'. __( '4 columns', 'demonstrator' ) .'
+					</label>
+					<label>
+						<input type="radio" value="3" '. checked( '3', $themes_grid, false ) .' name="'. $name . '[themes_grid]' .'">
+						'. __( '3 columns', 'demonstrator' ) .'
+					</label>
+					<label>
+						<input type="radio" value="2" '. checked( '2', $themes_grid, false ) .' name="'. $name . '[themes_grid]' .'">
+						'. __( '2 columns', 'demonstrator' ) .'
+					</label>
+					<label>
+						<input type="radio" value="1" '. checked( '1', $themes_grid, false ) .' name="'. $name . '[themes_grid]' .'">
+						'. __( '1 column', 'demonstrator' ) .'
+					</label>
+					',
+					'col-sm-6'
+				);
+
+				$output .= $this->tRow( 
+					__( 'Styles grid', 'demonstrator' ),
+					'
+					<label>
+						<input type="radio" value="4" '. checked( '4', $styles_grid, false ) .' name="'. $name . '[styles_grid]' .'">
+						'. __( '4 columns', 'demonstrator' ) .'
+					</label>
+					<label>
+						<input type="radio" value="3" '. checked( '3', $styles_grid, false ) .' name="'. $name . '[styles_grid]' .'">
+						'. __( '3 columns', 'demonstrator' ) .'
+					</label>
+					<label>
+						<input type="radio" value="2" '. checked( '2', $styles_grid, false ) .' name="'. $name . '[styles_grid]' .'">
+						'. __( '2 columns', 'demonstrator' ) .'
+					</label>
+					<label>
+						<input type="radio" value="1" '. checked( '1', $styles_grid, false ) .' name="'. $name . '[styles_grid]' .'">
+						'. __( '1 column', 'demonstrator' ) .'
+					</label>
+					',
+					'col-sm-6'
+				);
+
+				$output .= $this->tRow( 
+					__( 'Envato Username', 'demonstrator' ),
+					'<input name="'. $name . '[envato_username]' .'" type="text" class="widefat" value="'. $envato_username .'" />',
+					'col-sm-6'
+				);
+
+				$output .= $this->tRow( 
+					__( 'CreativeMarket Username', 'demonstrator' ),
+					'<input name="'. $name . '[creativemarket_username]' .'" type="text" class="widefat" value="'. $creativemarket_username .'" />',
+					'col-sm-6'
+				);
+
+			$output .= '</div>';
+		$output .= '</div>';
+
+		return $output;
 	}
 
-	// If all above fails, return false. This means, the option is not saved in DB.
-	else{
-		return false;
+	public function sanitize( $value ){
+		unset( $value['__noindex__'] );
+
+		if( is_array( $value ) ){
+			$new_themes = $value;
+			foreach ($value as $temp_id => $theme) {
+	
+				$new_themes = $this->replaceArrayKey( $new_themes, $temp_id, $theme['id'] );
+
+				if( $temp_id !== $theme['id'] ){
+					$old_items = get_option( 'demonstrator_instance_' . $temp_id, null );
+					if( isset($old_items) ){
+						update_option( 'demonstrator_instance_' . $theme['id'], $old_items );
+						delete_option( 'demonstrator_instance_' . $temp_id );
+					}
+				}
+
+			}			
+			$value = $new_themes;
+		}
+
+		return $value;
 	}
+
 }
+dts_register_field_type( 'switchers', 'Dts_Settings_Field_Switchers' );
