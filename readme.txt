@@ -40,6 +40,8 @@ Demonstrator allows to build a list of demo sites with or without demo styles. I
 * Do not hide the dropdown if no theme is selected.
 * Lazy-load images. We must wait for demo site from iframe to complete loading, not for images from top window.
 * Include a link to WP admin in top bar.
+* Pretty links.
+* Multiple switchers.
 
 
 ## TODO:
@@ -54,7 +56,6 @@ Demonstrator allows to build a list of demo sites with or without demo styles. I
 * Lazy-load items. Right now are loaded all themes and styles regardless if they are needed or not. It's needed to load to load each theme and style just when needed(probably using ajax). Ideas are welcome.
 * Add the possibility to customize the design of the switcher itself.
 * Add the possibility to activate google analytics.
-* Multiple switchers. Right now, it's not possible to create multiple switchers, but it will be a great idea to make this possible. For example: Someone may need this, in case they sell themes on multiple marketplaces.
 * Anonymous URL. Allow to open a link in switcher frame even if it not registered under a theme style. This may be usefull for other use cases.
 * Add an iframe loader, so it does not show up an incomplete site.
 * Style separators. Sometimes you may have too many demos that may need to be separated somehow. This one should allow to add sections of text that will serve as an intro to a styles set.
