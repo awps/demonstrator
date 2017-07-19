@@ -28,6 +28,26 @@ Demonstrator allows to build a list of demo sites with or without demo styles. I
 * The frame is not closed, but instead is collapsed on top. This actually is a bonus because the visitors never lose the purchase URL and the acces to other themes/styles.
 * Use the homepage and ignore the full site content, or setup a custom endpoint name.
 
+## How it works:
+
+You must create a switcher that will keep all demo sites. You can create more than one, but at least one is required. By default on first plugin installation a switcher is created, so you can focus on more important things. Go to "Demonstrator" page from admin side to add or edit a switcher.
+
+After the switcher is created, you can access it from a subpage under "Demonstrator" menu item.
+
+There complete all fields and save.
+
+Now you can access the switcher using "http://yoursiteadress.com/{switcher_id}". Where {switcher_id} is the ID used when the switcher was created. 
+
+## Live example:
+
+Here are some links that will show the plugin in action. The switcher ID in this case is `tf`.
+
+* **Switcher base url:**    http://themes.market/tf/
+* **Single site URL:**      http://themes.market/tf/gustoswp
+* **Shorten purchase URL:** http://themes.market/?buy=tf:gustoswp
+
+*More demos coming soon.*
+
 
 ## Completed TODOs:
 

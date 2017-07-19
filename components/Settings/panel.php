@@ -373,14 +373,65 @@ class Dts_Settings_Panel_Init{
 		$output = '<div class="wrap" id="demonstrator-panel-'. $this->id .'">';
 		$output .= '<form method="post" action="options.php">';
 		$output .= '<h2>'. $this->title .'</h2>';
+		$output .= '<div class="zg dts-panel-content">';
+		$output .= '<div class="col-md-9">';
 		echo $output;
 	}
 
 	public function pageClose(){
 		$output = submit_button();
+		$output .= '</div>';//col-md-
+		$output .= '<div class="col-md-3">';
+		$output .= $this->rightNotice();
+		$output .= $this->rightBlocks();
+		$output .= '</div>';//zg
 		$output .= '</form>';
 		$output .= '</div>';
 		echo $output;
+	}
+
+	public function rightNotice(){
+		return '
+			<div class="right-notice">
+				<img src="'. dmstr()->assetsURL() .'img/happy.png" />
+				<h3>Support the development</h3>
+				<p>
+				I invested a considerable amount of time in this product. 
+				And I still have a lot of work to do on it. <br>
+				Consider making a donation if you find this product useful. <br>
+				Don\'t ignore this message. Your donation will make a difference. 
+				I would like to improve it as much as I can, but your support is needed.
+				</p>
+				<a class="right-notice-button" href="#" target="_blank">Donate</a>
+			</div>
+		';
+	}
+
+	public function rightBlocks(){
+		return '
+			<div class="right-block">
+				<h3>Share with friends</h3>
+				<p class="description">If you find this plugin useful, then it\'s a big chance that your friends would think the same.</p>
+				<div class="zg-lg-2 zg-sm-1 zg-xs-4 zg-1">
+					<div><a target="_blank" href="https://twitter.com/intent/tweet?url='. $this->shareUrl() .'&text='. $this->shareSubject() .'" class="social-share twitter"><span class="dashicons dashicons-twitter"></span> Twitter</a></div>
+					<div><a target="_blank" href="https://www.facebook.com/sharer.php?s=100&p[title]='. $this->shareTitle() .'&u='. $this->shareUrl() .'&t='. $this->shareTitle() .'&p[summary]='. $this->shareSubject() .'&p[url]='. $this->shareUrl() .'" class="social-share facebook"><span class="dashicons dashicons-facebook-alt"></span> Facebook</a></div>
+					<div><a target="_blank" href="https://plus.google.com/share?url='. $this->shareUrl() .'" class="social-share googleplus"><span class="dashicons dashicons-googleplus"></span> Google+</a></div>
+					<div><a target="_blank" href="mailto:?subject='. $this->shareTitle() .'&body='. $this->shareSubject() .': '. $this->shareUrl() .'" class="social-share email"><span class="dashicons dashicons-email"></span> Email</a></div>
+				</div>
+			</div>
+		';
+	}
+
+	public function shareTitle(){
+		return esc_attr( '"Demonstrator" WordPress Plugin' );
+	}
+
+	public function shareSubject(){
+		return esc_attr( 'Hey! Checkout "Demonstrator" plugin for WordPress' );
+	}
+
+	public function shareUrl(){
+		return esc_url( 'https://wordpress.org/plugins/demonstrator/' );
 	}
 
 	public function sectionTitle( $title ){
@@ -1033,6 +1084,9 @@ class Dts_Settings_Field_Themes extends Dts_Settings_Field_Type{
 						foreach ($styles as $style_id => $style) {
 							$output .= $this->getSingleStyle( $theme_id, $style_id, $style );
 						}
+					}
+					else{
+						$output .= $this->getSingleStyle( $theme_id, 'st1', array() );
 					}
 					
 
