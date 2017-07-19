@@ -67,6 +67,7 @@ body{
 	.bar-right{
 		float: right;
 		height: 50px;
+		margin-right: 80px;
 	}
 
 	.logo{
@@ -83,7 +84,8 @@ body{
 	.btn-buy,
 	.menu-themes,
 	.menu-styles,
-	.toggle-bar{
+	.toggle-bar,
+	.top-btn{
 		position: relative;
 		display: inline-block;
 		font-size: 14px;
@@ -97,11 +99,16 @@ body{
 		.transition( background-color 0.15s );
 	}
 
+	.top-btn{
+		background-color: darken(@bar_bg, 13%);
+		color: @bar_color;
+		box-shadow: 0 2px 0 darken(@bar_bg, 18%);
+	}
+
 	.btn-buy{
 		box-shadow: 0 2px 0 darken(@btn_bg, 5%);
 		background-color: @btn_bg;
 		color: @btn_color;
-		margin-right: 80px;
 		&:hover{
 			background: darken(@btn_bg, 3%);
 		}
@@ -423,6 +430,9 @@ body{
 
 @media ( max-width: 300px ) {
 	.demonstrator-container{
+		.bar-right{
+			margin-right: 0;
+		}
 		.menu-styles,
 		.menu-themes,
 		.btn-buy{

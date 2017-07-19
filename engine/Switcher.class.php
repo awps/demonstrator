@@ -71,4 +71,14 @@ class Switcher{
 		return $class;
 	}
 
+	public function varToJson( $var, $array ){
+		// JSON Pretty print is required only for development
+		if ( version_compare( PHP_VERSION, '5.4', '>' ) && current_user_can('manage_options') ) {
+			echo PHP_EOL . 'var '. $var .' = '. json_encode( $array, JSON_PRETTY_PRINT ) .';';
+		}
+		else{
+			echo 'var '. $var .' = '. json_encode( $array ) .';';
+		}
+	}
+
 }

@@ -18,6 +18,7 @@ Demonstrator allows to build a list of demo sites with or without demo styles. I
 
 
 ## Completed TODOs:
+
 - [x] Make themes and styles sortable( in admin panel ).
 - [x] Display the price and description.
 - [x] Make a theme unlisted. This is usefull when you have to show the demo, but you don;t have the purchase URL yet. Example: You submitted for review and the theme should be visible only to reviewer, but not to other users. This will be possible only by using a direct link.
@@ -25,6 +26,8 @@ Demonstrator allows to build a list of demo sites with or without demo styles. I
 - [x] Hide "Purchase" button if a purchase URL is not available.
 - [x] Private themes. Just like unlisted, but instead do not allow access to demo using direct link for user without administrative rights.
 - [x] Do not hide the dropdown if no theme is selected.
+- [x] Lazy-load images. We must wait for demo site from iframe to complete loading, not for images from top window.
+- [x] Include a link to WP admin in top bar.
 
 
 ## TODO:

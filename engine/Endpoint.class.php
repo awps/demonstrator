@@ -42,7 +42,7 @@ class Endpoint {
 		if( !empty( $this->endpoints ) ){
 			foreach ($this->endpoints as $endpoint) {
 				$ep = get_query_var( $endpoint, null );
-
+				
 				if( ! isset( $ep ) ){
 					continue;
 				}

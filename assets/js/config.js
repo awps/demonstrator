@@ -42,8 +42,8 @@
 
 					// Set menu labels
 					// -----------------------
-					var _theme_id = new Uri( window.location.href ).getQueryParamValue( 'theme' );
-					var _style_id = new Uri( window.location.href ).getQueryParamValue( 'style' );
+					var _theme_id = demonstrator_initial[ 'theme' ];
+					var _style_id = demonstrator_initial[ 'style' ];
 
 					if( _theme_id && demonstrator_themes[ _theme_id ] ){
 						self.setMenuLabel( 'themes', _theme_id );
@@ -119,6 +119,7 @@
 						var _this = $(this),
 						_theme_id = _this.data( 'theme-id' ),
 						_style_id = _this.data( 'style-id' ),
+						_route_url = _this.data( 'route' ),
 						_mode = ( _this.hasClass( 'theme' ) ? 'themes' : 'styles' );
 
 						// It's a Theme item
@@ -147,7 +148,7 @@
 						self.setPurchaseUrl( _theme_id );
 
 						// Finally load the URL
-						self.loadUrl( _theme_id, _style_id );
+						self.loadUrl( _theme_id, _style_id, _route_url );
 
 					} );
 				},
@@ -291,7 +292,7 @@
 					return _category;
 				},
 
-				loadUrl: function( _theme_id, _style_id ){
+				loadUrl: function( _theme_id, _style_id, _route_url ){
 					var _theme_url = self.getThemeDemoUrl( _theme_id, _style_id ),
 					close_dd = true, // Used to close dropdowns
 					_new_url,
@@ -302,18 +303,11 @@
 
 					// TODO: Add loading indicator
 
-					// Build the current Window URL with this theme ID
-					_new_url  = new Uri( window.location.href ).replaceQueryParam( 'theme', _theme_id );
-					
-					if( self.getThemeStyle( _theme_id, _style_id ) ){
-						_new_url  = new Uri( _new_url ).replaceQueryParam( 'style', _style_id );
-					}
-					else{
-						_new_url  = new Uri( _new_url ).deleteQueryParam( 'style' );
+					if( ! self.getThemeStyle( _theme_id, _style_id ) ){
 						close_dd = false;
 					}
 
-					history.pushState('', 'Theme URL: ' + _new_url, _new_url);
+					history.pushState('', 'Theme URL: ' + _route_url, _route_url);
 
 					if( close_dd ){
 						self.closeDropdowns();

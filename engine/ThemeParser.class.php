@@ -77,7 +77,7 @@ class ThemeParser {
 		if( !empty( $this->theme['purchase_url'] ) ){
 			$this->theme[ 'short_buy_url' ] = esc_url_raw( 
 				add_query_arg( 
-					array( 'sid' => $this->switcher_id, 'buy' => $this->theme_id ), 
+					array( 'buy' => $this->switcher_id .':'. $this->theme_id ), 
 					home_url() 
 				) 
 			);
@@ -102,7 +102,11 @@ class ThemeParser {
 	}
 
 	public function doEnvatoReferal(){
-		$envato_username = dts_get_option( 'demonstrator_options', 'envato_username' );
+		$envato_username = false;
+		$items = dts_get_option( 'demonstrator_settings' );
+		if( !empty($items['items'][ $this->switcher_id ]['envato_username']) ){
+			$envato_username = $items['items'][ $this->switcher_id ]['envato_username'];
+		}
 		
 		if( 
 			!empty( $envato_username ) && (
@@ -110,7 +114,7 @@ class ThemeParser {
 				stripos($this->purchase_url, 'codecanyon.net') !== false 
 			)
 		){
-			$this->theme['purchase_url'] = esc_url( add_query_arg( array(
+			$this->purchase_url = esc_url( add_query_arg( array(
 				'ref' => $envato_username
 			), $this->purchase_url ) );
 		}
@@ -119,7 +123,11 @@ class ThemeParser {
 	}
 
 	public function doCreativeMarketReferal(){
-		$creativemarket_username = dts_get_option( 'demonstrator_options', 'creativemarket_username' );
+		$creativemarket_username = false;
+		$items = dts_get_option( 'demonstrator_settings' );
+		if( !empty($items['items'][ $this->switcher_id ]['creativemarket_username']) ){
+			$creativemarket_username = $items['items'][ $this->switcher_id ]['creativemarket_username'];
+		}
 
 		if( 
 			!empty( $creativemarket_username ) && (
@@ -128,7 +136,7 @@ class ThemeParser {
 				stripos($this->purchase_url, 'crtv.mk') !== false 
 			)
 		){
-			$this->theme['purchase_url'] = esc_url( add_query_arg( array(
+			$this->purchase_url = esc_url( add_query_arg( array(
 				'u' => $creativemarket_username
 			), $this->purchase_url ) );
 		}

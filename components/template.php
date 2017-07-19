@@ -6,7 +6,6 @@
 
 	<!-- Allow responsive -->
 	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<link rel="profile" href="http://gmpg.org/xfn/11">
 
 	<!-- Set the adress bar color in chrome 39+ on mobile devices  -->
 	<meta name="theme-color" content="#262F35">
@@ -32,24 +31,31 @@
 
 <?php 
 
-	$switcher_id = $GLOBALS[ 'demonstrator_current_query_var' ];
-	$tpl         = new Demonstrator\Switcher( $switcher_id );
-	$themes      = $tpl->getThemes();
-	$logo_url    = $tpl->getLogoUrl();
-	$site_url    = $tpl->getSiteUrl();
+	$switcher_id  = $GLOBALS[ 'demonstrator_current_query_var' ];
+	$tpl          = new Demonstrator\Switcher( $switcher_id );
+	$themes       = $tpl->getThemes();
+	$logo_url     = $tpl->getLogoUrl();
+	$site_url     = $tpl->getSiteUrl();
+
+	$router       = new Demonstrator\Router( $switcher_id );
+	$query_var    = $router->getQueryVar();
+	$loaded_theme = $router->getThemeId();
+	$loaded_style = $router->getStyleId();
+	$switcher_url = $router->getSwitcherUrl();
+
+	$demonstrator_initial = array(
+		'query_var'    => $query_var,
+		'theme'        => $loaded_theme,
+		'style'        => $loaded_style,
+		'switcher_url' => $switcher_url,
+	);
 ?>
 
 	<title><?php echo $tpl->getSwitcherTitle(); ?></title>
 
 	<script type="text/javascript"><?php 
-		// JSON Pretty print is required only for development
-		if ( version_compare( PHP_VERSION, '5.4', '>' ) && current_user_can('manage_options') ) {
-			echo PHP_EOL . 'var demonstrator_themes = '. json_encode( $themes, JSON_PRETTY_PRINT );
-		}
-		else{
-			echo 'var demonstrator_themes = '. json_encode( $themes );
-		}
-		
+		$tpl->varToJson( 'demonstrator_initial', $demonstrator_initial );
+		$tpl->varToJson( 'demonstrator_themes', $themes );
 	?></script>
 
 	<?php do_action( 'demonstrator_header' ); ?>
@@ -57,9 +63,6 @@
 <body>
 
 <?php 
-
-	$loaded_theme        = !empty( $_GET['theme'] ) ? sanitize_key( $_GET['theme'] ) : false;
-	$loaded_style        = !empty( $_GET['style'] ) ? sanitize_key( $_GET['style'] ) : false;
 	$loaded_theme_exists = $loaded_theme && array_key_exists($loaded_theme, $themes);
 	$iframe_url          = 'about:blank';
 	$hidden_styles_menu  = 'hidden';
@@ -99,7 +102,7 @@
 				$open_tag = !empty( $site_url ) ? 'a href="'. esc_url($site_url) .'" target="_blank" ' : 'span ';
 				$close_tag = !empty( $site_url ) ? 'a' : 'span';
 				if( !empty( $logo_url ) ) {
-					echo '<'. $open_tag .' class="logo"><img src="'. esc_url( $logo_url ) .'" alt="" /></'. $close_tag .'>';
+					echo '<'. $open_tag .' class="logo"><img src="data:image/png;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs=" data-src="'. esc_url( $logo_url ) .'" alt="" /></'. $close_tag .'>';
 				} 
 			?>
 			<div id="menu-themes" class="menu-selector menu-themes <?php echo $open_themes; ?>">
@@ -110,14 +113,26 @@
 				<span class="the-icon flaticon-web-1"></span>
 				<span class="placeholder"><?php _e( 'Choose style', 'demonstrator' ) ?></span>
 			</div>
+		
+			<?php do_action( 'demonstrator_bar_left' ); ?>
+
 		</div>
+		<span id="toggle-bar" class="toggle-bar">
+			<span class="the-icon up flaticon-up-arrow"></span>
+			<span class="the-icon down flaticon-down-arrow"></span>
+		</span>
+		
+		<?php do_action( 'demonstrator_bar_center' ); ?>
+		
 		<div class="bar-right">
-			<span id="toggle-bar" class="toggle-bar">
-				<span class="the-icon up flaticon-up-arrow"></span>
-				<span class="the-icon down flaticon-down-arrow"></span>
-			</span>
-		</div>
-		<div class="bar-right">
+
+			<?php do_action( 'demonstrator_bar_right' ); ?>
+		
+			<?php if( current_user_can( 'manage_options' ) ) : ?>
+			<a href="<?php echo $router->getSwitcherAdminUrl(); ?>" class="top-btn" title="WP Admin">
+				Admin
+			</a>
+			<?php endif; ?>
 			<a id="purchase" href="#" target="_blank" class="btn-buy hidden">
 				<span class="the-icon flaticon-commerce"></span>
 				<span class="placeholder"><?php _e( 'Purchase', 'demonstrator' ) ?></span>
@@ -174,9 +189,9 @@
 				}
 				
 				echo '<div class="theme-item '. $theme_id . $active .'">
-					<a data-theme-id="'. $theme_id .'" href="'. esc_url( $url ) .'" class="a-demo-item-link theme status-'. $theme_status .'">
+					<a data-theme-id="'. $theme_id .'" href="'. esc_url( $url ) .'" class="a-demo-item-link theme status-'. $theme_status .'" data-route="'. $router->getThemeUrl( $theme_id ) .'">
 						<div class="item-img">
-							<img src="'. $theme[ 'img' ] .'" />
+							<img src="data:image/png;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs=" data-src="'. $theme[ 'img' ] .'" />
 							'. $description .'
 							'. $admin_notice_badge .'
 						</div>
@@ -222,8 +237,8 @@
 					$hidden = ( $loaded_theme !== $theme_id ) ? ' hidden' : '';
 				
 					echo '<div class="style-item '. $theme_id . $hidden .'">
-						<a data-theme-id="'. $theme_id .'" data-style-id="'. $style_id .'" href="'. $url .'" class="a-demo-item-link style">
-							<div class="item-img"><img src="'. $style[ 'img' ] .'" /></div>
+						<a data-theme-id="'. $theme_id .'" data-style-id="'. $style_id .'" href="'. $url .'" class="a-demo-item-link style" data-route="'. $router->getStyleUrl( $theme_id, $style_id ) .'">
+							<div class="item-img"><img src="data:image/png;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs=" data-src="'. $style[ 'img' ] .'" /></div>
 							<div class="label">'. $style[ 'label' ] .'</div>
 						</a>
 					</div>';
@@ -237,5 +252,17 @@
 <?php endif; ?>
 
 <?php do_action( 'demonstrator_footer' ); ?>
+
+<script>
+	function init() {
+		var imgDefer = document.getElementsByTagName('img');
+		for (var i=0; i<imgDefer.length; i++) {
+			if(imgDefer[i].getAttribute('data-src')) {
+				imgDefer[i].setAttribute('src',imgDefer[i].getAttribute('data-src'));
+			} 
+		} 
+	}
+	window.onload = init;
+</script>
 </body>
 </html>

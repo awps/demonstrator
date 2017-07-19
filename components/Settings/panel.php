@@ -1008,11 +1008,12 @@ class Dts_Settings_Field_Themes extends Dts_Settings_Field_Type{
 				);
 
 				$switcher_id = !empty( $_GET['page'] ) ? str_replace( 'demonstrator_instance_', '', $_GET['page'] ) : false;
+				$router = new Demonstrator\Router( $switcher_id );
 
 				if( $switcher_id ){
 					$output .= $this->tRow( 
 						__( 'Demo URL', 'demonstrator' ),
-						'<a class="demo_url_link" data-base-url="'. demonstrator_get_theme_url( $switcher_id, '__noindex__' ) .'" href="'. demonstrator_get_theme_url( $switcher_id, $theme_id ) .'" target="_blank">'. demonstrator_get_theme_url( $switcher_id, $theme_id ) .'</a>'
+						'<a class="demo_url_link" data-base-url="'. $router->getThemeUrl( '__noindex__' ) .'" href="'. $router->getThemeUrl( $theme_id ) .'" target="_blank">'. $router->getThemeUrl( $theme_id ) .'</a>'
 					);
 				}
 

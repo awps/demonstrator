@@ -30,31 +30,34 @@ Demonstrator allows to build a list of demo sites with or without demo styles. I
 
 
 ## Completed TODOs:
-- [x] Make themes and styles sortable( in admin panel ).
-- [x] Display the price and description.
-- [x] Make a theme unlisted. This is usefull when you have to show the demo, but you don;t have the purchase URL yet. Example: You submitted for review and the theme should be visible only to reviewer, but not to other users. This will be possible only by using a direct link.
-- [x] Do not allow to collapse the top bar and hide the dropdown(themes list) if no theme has been selected.
-- [x] Hide "Purchase" button if a purchase URL is not available.
-- [x] Private themes. Just like unlisted, but instead do not allow access to demo using direct link for user without administrative rights.
-- [x] Do not hide the dropdown if no theme is selected.
+
+* Make themes and styles sortable( in admin panel ).
+* Display the price and description.
+* Make a theme unlisted. This is usefull when you have to show the demo, but you don;t have the purchase URL yet. Example: You submitted for review and the theme should be visible only to reviewer, but not to other users. This will be possible only by using a direct link.
+* Do not allow to collapse the top bar and hide the dropdown(themes list) if no theme has been selected.
+* Hide "Purchase" button if a purchase URL is not available.
+* Private themes. Just like unlisted, but instead do not allow access to demo using direct link for user without administrative rights.
+* Do not hide the dropdown if no theme is selected.
+* Lazy-load images. We must wait for demo site from iframe to complete loading, not for images from top window.
+* Include a link to WP admin in top bar.
 
 
 ## TODO:
 
-- [ ] Import, Export and Backup settings(with images/files). This requires a lot of work.
-- [ ] Add an option to specify the frame size(width&height) from admin panel. Then this will be available on frontend as dropdown.
-- [ ] Add an upload field to each style. This may be handy if you want to include the demo data.
-- [ ] Implement custom colors for each category. Currently this is hardcoded for `WordPress` and `HTML` categories only.
-- [ ] Make possible to change the text of all elements directly from admin panel.
-- [ ] Add the possibility to ignore the 'purchase URL' in favor to a 'download URL'. Just in case if you want to provide free files.
-- [ ] Display an icon that will allow to preview the the theme outside the iframe. An alternative to `collapse`.
-- [ ] Lazy-load items. Right now are loaded all themes and styles regardless if they are needed or not. It's needed to load to load each theme and style just when needed(probably using ajax). Ideas are welcome.
-- [ ] Add the possibility to customize the design of the switcher itself.
-- [ ] Add the possibility to activate google analytics.
-- [ ] Multiple switchers. Right now, it's not possible to create multiple switchers, but it will be a great idea to make this possible. For example: Someone may need this, in case they sell themes on multiple marketplaces.
-- [ ] Anonymous URL. Allow to open a link in switcher frame even if it not registered under a theme style. This may be usefull for other use cases.
-- [ ] Add an iframe loader, so it does not show up an incomplete site.
-- [ ] Style separators. Sometimes you may have too many demos that may need to be separated somehow. This one should allow to add sections of text that will serve as an intro to a styles set.
+* Import, Export and Backup settings(with images/files). This requires a lot of work.
+* Add an option to specify the frame size(width&height) from admin panel. Then this will be available on frontend as dropdown.
+* Add an upload field to each style. This may be handy if you want to include the demo data.
+* Implement custom colors for each category. Currently this is hardcoded for `WordPress` and `HTML` categories only.
+* Make possible to change the text of all elements directly from admin panel.
+* Add the possibility to ignore the 'purchase URL' in favor to a 'download URL'. Just in case if you want to provide free files.
+* Display an icon that will allow to preview the the theme outside the iframe. An alternative to `collapse`.
+* Lazy-load items. Right now are loaded all themes and styles regardless if they are needed or not. It's needed to load to load each theme and style just when needed(probably using ajax). Ideas are welcome.
+* Add the possibility to customize the design of the switcher itself.
+* Add the possibility to activate google analytics.
+* Multiple switchers. Right now, it's not possible to create multiple switchers, but it will be a great idea to make this possible. For example: Someone may need this, in case they sell themes on multiple marketplaces.
+* Anonymous URL. Allow to open a link in switcher frame even if it not registered under a theme style. This may be usefull for other use cases.
+* Add an iframe loader, so it does not show up an incomplete site.
+* Style separators. Sometimes you may have too many demos that may need to be separated somehow. This one should allow to add sections of text that will serve as an intro to a styles set.
 
 ## Support & Donate: 
 
