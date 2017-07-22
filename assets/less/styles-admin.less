@@ -227,7 +227,7 @@
 }
 
 .right-block{
-	margin: 15px 0;
+	margin: 30px 0 15px;
 	.social-share{
 		display: block;
 		text-decoration: none;
@@ -245,5 +245,32 @@
 		&.facebook{
 			background-color: #3e5b98;
 		}
+		&:hover{
+			opacity: .95;
+		}
+	}
+}
+
+.github-link{
+	display: inline-block;
+	text-decoration: none;
+	background-color: #333;
+	color: #fff;
+	border-radius: 3px;
+	padding: 7px;
+	margin: 10px 1px 0;
+	img{
+		display: inline-block;
+		margin-right: 5px;
+		vertical-align: middle;
+	}
+	&:hover,
+	&:active,
+	&:visited,
+	&:focus {
+		color: #fff;
+	}
+	&:hover{
+		opacity: .95;
 	}
 }

@@ -1,3 +1,6 @@
+### Install the stable version from: 
+##### https://wordpress.org/plugins/demonstrator/
+
 ## Description
 
 More than a theme switcher!

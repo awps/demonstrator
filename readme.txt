@@ -4,7 +4,7 @@ Donate link: https://paypal.me/zerowp
 Tags: theme, switcher, demo, connect, themeforest, creativemarket, codecanyon, mojothemes
 Requires at least: 4.7
 Tested up to: 4.8
-Stable tag: 1.1
+Stable tag: 1.2
 License: GPL-2.0+
 License URI: http://www.gnu.org/licenses/gpl-2.0.txt
 
@@ -91,3 +91,21 @@ Donate link: https://paypal.me/zerowp
 
 ## Issues tracker:
 Please report bugs on: https://github.com/ZeroWP/demonstrator/issues
+
+== Changelog ==
+
+= 1.2 =
+* Major code refactoring.
+
+= 1.1 = 
+* Do not allow to collapse the top bar and hide the dropdown(themes list) if no theme has been selected.
+* Hide "Purchase" button if a purchase URL is not available.
+* Private themes. Just like unlisted, but instead do not allow access to demo using direct link for user without administrative rights.
+* Do not hide the dropdown if no theme is selected.
+* Lazy-load images. We must wait for demo site from iframe to complete loading, not for images from top window.
+* Include a link to WP admin in top bar.
+* Pretty links.
+* Multiple switchers.
+
+= 1.0 =
+* Initial release.

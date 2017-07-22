@@ -1,4 +1,24 @@
 <?php 
+function dts_settings_panels(){
+	return apply_filters( 'dts_settings_panels', array() );
+}
+
+function dts_settings_fields_types(){
+	return apply_filters( 'dts_settings_fields_types', array() );
+}
+
+new Demonstrator\RegisterFieldType( 'text', 'Demonstrator\FieldText' );
+new Demonstrator\RegisterFieldType( 'textarea', 'Demonstrator\FieldTextarea' );
+new Demonstrator\RegisterFieldType( 'select', 'Demonstrator\FieldSelect' );
+new Demonstrator\RegisterFieldType( 'page_select', 'Demonstrator\FieldPageSelect' );
+new Demonstrator\RegisterFieldType( 'checkbox', 'Demonstrator\FieldCheckbox' );
+new Demonstrator\RegisterFieldType( 'radio', 'Demonstrator\FieldRadio' );
+new Demonstrator\RegisterFieldType( 'info_box_table', 'Demonstrator\FieldInfoBoxTable' );
+new Demonstrator\RegisterFieldType( 'info_field', 'Demonstrator\FieldInfoField' );
+new Demonstrator\RegisterFieldType( 'image', 'Demonstrator\FieldImage' );
+new Demonstrator\RegisterFieldType( 'themes', 'Demonstrator\FieldThemes' );
+new Demonstrator\RegisterFieldType( 'switchers', 'Demonstrator\FieldSwitchers' );
+
 /**
  * Get a option from DB
  *

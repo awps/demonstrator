@@ -3,10 +3,6 @@
 ---------------------------------*/
 if ( ! defined( 'ABSPATH' ) ) exit;
 
-/* Create settings page
-----------------------------*/
-require_once DEMONSTRATOR_PATH .'components/Settings/panel.php';
-
 /* Create endpoints
 ------------------------*/
 new Demonstrator\Endpoint;
@@ -17,7 +13,7 @@ new Demonstrator\Redirect;
 /* Add settings fields
 ---------------------------*/
 add_action( 'demonstrator:init', function(){
-	$panel = new Dts_Settings_Panel( 'demonstrator_settings', __('Demonstrator', 'demonstrator'));
+	$panel = new Demonstrator\SettingsPanel( 'demonstrator_settings', __('Demonstrator', 'demonstrator'));
 
 	$panel->addSection( 'switchers', __( 'Switchers', 'demonstrator' ) );
 
@@ -38,7 +34,7 @@ add_action( 'demonstrator:init', function(){
 
 		foreach ($switchers as $switcher_id => $switcher) {
 
-			$panel = new Dts_Settings_Panel( 'demonstrator_instance_' . $switcher_id, $switcher[ 'label' ], array(
+			$panel = new Demonstrator\SettingsPanel( 'demonstrator_instance_' . $switcher_id, $switcher[ 'label' ], array(
 				'parent_slug' => 'demonstrator_settings',
 			) );
 
