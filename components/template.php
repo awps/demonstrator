@@ -29,6 +29,12 @@
 |=============================================================================|
 -->
 
+<script type="text/javascript">	
+	if (top.location != location) {
+		top.location.href = document.location.href;
+	}
+</script>
+
 <?php 
 
 	$switcher_id  = $GLOBALS[ 'demonstrator_current_query_var' ];
@@ -102,7 +108,7 @@
 				$open_tag = !empty( $site_url ) ? 'a href="'. esc_url($site_url) .'" target="_blank" ' : 'span ';
 				$close_tag = !empty( $site_url ) ? 'a' : 'span';
 				if( !empty( $logo_url ) ) {
-					echo '<'. $open_tag .' class="logo"><img src="data:image/png;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs=" data-src="'. esc_url( $logo_url ) .'" alt="" /></'. $close_tag .'>';
+					echo '<'. $open_tag .' class="logo"><img src="'. esc_url( $logo_url ) .'" alt="" /></'. $close_tag .'>';
 				} 
 			?>
 			<div id="menu-themes" class="menu-selector menu-themes <?php echo $open_themes; ?>">
@@ -117,7 +123,7 @@
 			<?php do_action( 'demonstrator_bar_left' ); ?>
 
 		</div>
-		<span id="toggle-bar" class="toggle-bar">
+		<span id="toggle-bar" class="toggle-bar hidden">
 			<span class="the-icon up flaticon-up-arrow"></span>
 			<span class="the-icon down flaticon-down-arrow"></span>
 		</span>

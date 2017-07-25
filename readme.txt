@@ -4,7 +4,7 @@ Donate link: https://paypal.me/zerowp
 Tags: theme, switcher, demo, connect, themeforest, creativemarket, codecanyon, mojothemes
 Requires at least: 4.7
 Tested up to: 4.8
-Stable tag: 1.2
+Stable tag: 1.2.1
 License: GPL-2.0+
 License URI: http://www.gnu.org/licenses/gpl-2.0.txt
 
@@ -93,6 +93,13 @@ Donate link: https://paypal.me/zerowp
 Please report bugs on: https://github.com/ZeroWP/demonstrator/issues
 
 == Changelog ==
+
+= 1.2.1 =
+* Faster escape the iframe if it's within another iframe. Previously it has to wait for jquery and CSS to load first.
+* Hide dropdown on tab click. Previously it has been possible to close it only on top bar click.
+* Do not show the arrow used to collapse the bar when no theme has been selected.
+* Load bar logo before any other images.
+* Shortcut link in admin panel to WordPress.ORG reviews page. Just a reminder. ;)
 
 = 1.2 =
 * Major code refactoring.

@@ -316,6 +316,15 @@ class InitPanel{
 			</div>'
 		);
 
+		$output .= $this->_rightBlock(
+			__( 'Rate this plugin:', 'demonstrator' ),
+			'Leave a five star review if you really like this plugin ;)',
+			'<div>
+				<a target="_blank" href="https://wordpress.org/support/plugin/demonstrator/reviews/#new-post" class="rating">
+				'. str_repeat('<span class="dashicons dashicons-star-filled"></span>', 5) .'</a>
+			</div>'
+		);
+
 		return $output;
 	}
 

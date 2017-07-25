@@ -10,7 +10,7 @@
  * Text Domain: demonstrator
  * Domain Path: /languages
  *
- * Version:     1.2
+ * Version:     1.2.1
  * 
  */
 
@@ -24,7 +24,7 @@ function demonstrator_config( $key = false ){
 	$settings = apply_filters( 'demonstrator:config_args', array(
 		
 		// Plugin data
-		'version'          => '1.2',
+		'version'          => '1.2.1',
 		'min_php_version'  => '5.3',
 		
 		// The list of required plugins. 'slug' => array 'name and uri'

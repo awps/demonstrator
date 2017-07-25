@@ -36,10 +36,6 @@
 
 					self.setFrameDims();
 
-					if (top.location != location) {
-						top.location.href = document.location.href;
-					}
-
 					// Set menu labels
 					// -----------------------
 					var _theme_id = demonstrator_initial[ 'theme' ];
@@ -76,12 +72,34 @@
 				},
 
 				dropdowns: function(){
+					
+					// Themes menu
 					$( '#menu-themes' ).on( 'click', function(){
-						self.openDropdown( 'themes' );
+						if( $(this).hasClass('selected active') ){
+							self.closeDropdown( 'themes' );
+						}
+						else{
+							self.openDropdown( 'themes' );
+						}
 					} );
+
+					// Styles menu
 					$( '#menu-styles' ).on( 'click', function(){
-						self.openDropdown( 'styles' );
+						if( $(this).hasClass('selected active') ){
+							self.closeDropdown( 'styles' );
+						}
+						else{
+							self.openDropdown( 'styles' );
+						}
 					} );
+
+					// Hide all dropdowns when top bar is clicked
+					$( '#demonstrator-bar' ).on( 'click', function( event ) {
+						if( $('#menu-themes').hasClass( 'selected' ) && event.target.id === 'demonstrator-bar' ){
+							self.closeDropdowns();
+						}
+					});
+
 				},
 
 				openDropdown: function( _id ){
@@ -314,23 +332,6 @@
 					}
 				},
 
-				hideMenuWhenClickOutside: function(){
-					$( document ).mouseup( function( event ) {
-						var _menu_selector = $( '.menu-selector' );
-						var _dd_selector = $( '.demonstrator-dropdown' );
-						
-						if ( 
-							$('#menu-themes').hasClass( 'selected' ) &&
-							// ! _menu_selector.is( event.target ) && 
-							// _menu_selector.has( event.target ).length === 0 && 
-							! _dd_selector.is( event.target ) && 
-							_dd_selector.has( event.target ).length === 0
-						){
-							self.closeDropdowns();
-						}
-					});
-				},
-
 				setMenuLabel: function( _for, _theme_id, _style_id ){
 					var _title;
 
@@ -347,6 +348,7 @@
 					if( _title ){
 						$( '.menu-selector.menu-'+ _for ).addClass('selected');
 						$( '.menu-selector.menu-'+ _for +' .placeholder' ).html( _title );
+						$( '#toggle-bar' ).removeClass('hidden');
 					}
 				},
 
@@ -401,7 +403,6 @@
 					self.prepareSite();
 					self.dropdowns();
 					self.loadThemeOnClick();
-					self.hideMenuWhenClickOutside();
 					self.toggleBar();
 
 					return this;
