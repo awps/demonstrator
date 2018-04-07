@@ -1,324 +1,324 @@
-;(function( $ ) {
+;(function ($) {
 
-	"use strict";
+    "use strict";
 
-	$.fn.DEMONSTRATOR_Plugin = function( options ) {
+    $.fn.DEMONSTRATOR_Plugin = function (options) {
 
-		if (this.length > 1){
-			this.each(function() {
-				$(this).DEMONSTRATOR_Plugin(options);
-			});
-			return this;
-		}
+        if (this.length > 1) {
+            this.each(function () {
+                $(this).DEMONSTRATOR_Plugin(options);
+            });
+            return this;
+        }
 
-		// Defaults
-		var settings = $.extend({
-			multiple: false,
-		}, options );
+        // Defaults
+        var settings = $.extend({
+            multiple: false,
+        }, options);
 
-		// Cache current instance
-		var plugin = this;
+        // Cache current instance
+        var plugin = this;
 
-		//Plugin go!
-		var init = function() {
-			plugin.build();
-		}
+        //Plugin go!
+        var init = function () {
+            plugin.build();
+        }
 
-		// Build structure
-		this.build = function() {
-			var self = false;
-			var frame,
-			_uploader;
+        // Build structure
+        this.build = function () {
+            var self = false;
+            var frame,
+                _uploader;
 
-			var _base = {
+            var _base = {
 
-				openFrame: function(){
-					$('body').on( 'click', '.demonstrator_uploader_btn', function( event ){
-						event.preventDefault();
+                openFrame: function () {
+                    $('body').on('click', '.demonstrator_uploader_btn', function (event) {
+                        event.preventDefault();
 
-						/* _this button
-						--------------------*/
-						var _this = $(this);
-						
-						_uploader = _this.parents( '.demonstrator_uploader' );
+                        /* _this button
+                        --------------------*/
+                        var _this = $(this);
 
-						// console.log( _uploader );
+                        _uploader = _this.parents('.demonstrator_uploader');
 
-						// This uploader frame has been created open it
-						if( frame){
-							frame.open();
-						}
-						else{
-							frame = self.createMediaFrame();
-							frame.open();
-						}
+                        // console.log( _uploader );
 
-						// console.log( frame );
+                        // This uploader frame has been created open it
+                        if (frame) {
+                            frame.open();
+                        }
+                        else {
+                            frame = self.createMediaFrame();
+                            frame.open();
+                        }
 
-						// When an image is selected in the media frame...
-						frame.on( 'select', function() {
+                        // console.log( frame );
 
-							// Get media attachment details from the frame state
-							var attachments = frame.state().get('selection').toJSON();
-							
-							// console.log( attachments );
+                        // When an image is selected in the media frame...
+                        frame.on('select', function () {
 
-							/* Set media
-							-----------------*/
-							var _container = _uploader.find( '.media-container' ),
-							_image = ( attachments[0] ) ? attachments[0] : false;
-							if( _image && _image.url ){
-								var _thumb = false;
-								if( _image.sizes.large ){
-									_thumb = _image.sizes.large.url;
-								}
-								else{
-									_thumb = _image.url;
-								}
-								_container.html( '<img src="'+ _thumb +'" />' );
-								_uploader.find( '.media-input' ).val( _thumb ).trigger('change');
-							}
+                            // Get media attachment details from the frame state
+                            var attachments = frame.state().get('selection').toJSON();
 
-						});
+                            // console.log( attachments );
 
-					});
-				},
+                            /* Set media
+                            -----------------*/
+                            var _container = _uploader.find('.media-container'),
+                                _image = (attachments[0]) ? attachments[0] : false;
+                            if (_image && _image.url) {
+                                var _thumb = false;
+                                if (_image.sizes.large) {
+                                    _thumb = _image.sizes.large.url;
+                                }
+                                else {
+                                    _thumb = _image.url;
+                                }
+                                _container.html('<img src="' + _thumb + '" />');
+                                _uploader.find('.media-input').val(_thumb).trigger('change');
+                            }
 
-				// Create a media frame
-				createMediaFrame: function(){
+                        });
 
-					var _defaults = {
-						frame: 'select',
-						// title: _uploader.data('frame-title'),
-						// button: {
-						// 	text: _uploader.data('frame-button-label'),
-						// },
-						multiple: false
-					};
+                    });
+                },
 
-					_defaults.library = {
-						type: 'image'
-					};
+                // Create a media frame
+                createMediaFrame: function () {
 
-					return wp.media( _defaults );
-				},
+                    var _defaults = {
+                        frame: 'select',
+                        // title: _uploader.data('frame-title'),
+                        // button: {
+                        // 	text: _uploader.data('frame-button-label'),
+                        // },
+                        multiple: false
+                    };
 
-				uniqid: function(_nr, _underscore){
-					
-					var possible_letters = "abcdefghijklmnopqrstuvwxyz",
-						possible_nr = "0123456789",
-						possible_all = "abcdefghijklmnopqrstuvwxyz0123456789",
-						_new_nr, text="", text1="", text2="", text3="";
+                    _defaults.library = {
+                        type: 'image'
+                    };
 
-					if( _nr < 4 ) _nr = 4;
+                    return wp.media(_defaults);
+                },
 
-					if( _underscore ){
-						_new_nr = parseInt(_nr, 10) - 2;
-						for( var i=0; i < 2; i++ ){
-							text1 += possible_letters.charAt(Math.floor(Math.random() * possible_letters.length));
-						}
-						if( _new_nr > 3 ){
-							_new_nr = _new_nr - 3;
-							for( var i=0; i < _new_nr; i++ ){
-								text2 += possible_all.charAt(Math.floor(Math.random() * possible_all.length));
-							}
-							for( var i=0; i < 3; i++ ){
-								text3 += possible_nr.charAt(Math.floor(Math.random() * possible_nr.length));
-							}
-						}
-						else{
-							for( var i=0; i < _new_nr; i++ ){
-								text2 += possible_all.charAt(Math.floor(Math.random() * possible_all.length));
-							}
-						}
-						
-						text = text1 +'_'+ text2 + text3;
-					}
-					else{
-						for( var i=0; i < _nr; i++ ){
-							text += possible_all.charAt(Math.floor(Math.random() * possible_all.length));
-						}
-					}
-					
+                uniqid: function (_nr, _underscore) {
 
-					return text;
-				},
+                    var possible_letters = "abcdefghijklmnopqrstuvwxyz",
+                        possible_nr = "0123456789",
+                        possible_all = "abcdefghijklmnopqrstuvwxyz0123456789",
+                        _new_nr, text = "", text1 = "", text2 = "", text3 = "";
 
-				livetext: function( field, section ){
-					$( '.themes-repeatable-block' ).on( 'keyup change', field, function(){
-						var thisval = $(this).val();
-						$(this).parents('.acc_section').find( section ).text( thisval );
-					});
-				},
+                    if (_nr < 4) _nr = 4;
 
-				repeatableThemes: function( _mode ){
+                    if (_underscore) {
+                        _new_nr = parseInt(_nr, 10) - 2;
+                        for (var i = 0; i < 2; i++) {
+                            text1 += possible_letters.charAt(Math.floor(Math.random() * possible_letters.length));
+                        }
+                        if (_new_nr > 3) {
+                            _new_nr = _new_nr - 3;
+                            for (var i = 0; i < _new_nr; i++) {
+                                text2 += possible_all.charAt(Math.floor(Math.random() * possible_all.length));
+                            }
+                            for (var i = 0; i < 3; i++) {
+                                text3 += possible_nr.charAt(Math.floor(Math.random() * possible_nr.length));
+                            }
+                        }
+                        else {
+                            for (var i = 0; i < _new_nr; i++) {
+                                text2 += possible_all.charAt(Math.floor(Math.random() * possible_all.length));
+                            }
+                        }
 
-					$('.demonstrator_themes').smk_Accordion({
-						closeAble: true
-					});
+                        text = text1 + '_' + text2 + text3;
+                    }
+                    else {
+                        for (var i = 0; i < _nr; i++) {
+                            text += possible_all.charAt(Math.floor(Math.random() * possible_all.length));
+                        }
+                    }
 
-					// Live update title and category(and other) on typing
-					self.livetext( '.this-section-theme-title-field', '.section-theme-title' );
-					self.livetext( '.this-section-theme-id-field', '.section-theme-id' );
-					self.livetext( '.this-section-theme-category-field', '.section-theme-category' );
 
-					// Live demo link set
-					$( '.themes-repeatable-block' ).on( 'keyup change', '.this-section-theme-id-field', function(){
-						var thisval = $(this).val(),
-						base_demo_url_link = $(this).parents('.acc_section').find('.demo_url_link'),
-						base_demo_url = base_demo_url_link.data('base-url');
-						
-						if( base_demo_url ){
-							var demo_url = base_demo_url.replace( '__noindex__', thisval );
-							base_demo_url_link.attr( 'href', demo_url ).text( demo_url );
-						}
-					});
+                    return text;
+                },
 
-					// Delete section
-					$('.themes-repeatable-block').on( 'click', '.delete-theme', function( event ){
-						event.preventDefault();
+                livetext: function (field, section) {
+                    $('.themes-repeatable-block').on('keyup change', field, function () {
+                        var thisval = $(this).val();
+                        $(this).parents('.acc_section').find(section).text(thisval);
+                    });
+                },
 
-						var _block = $(this).parents('.themes-repeatable-block');
-						var minimum_sections = parseInt( _block.data('minimum-sections') , 10 );
-						var lists = _block.children().not('.sfa-theme-noindex');
+                repeatableThemes: function (_mode) {
 
-						if( lists.length > minimum_sections ){
-							if( ! confirm( 'Are you sure that you want to delete this?' ) )
-								return;
+                    $('.demonstrator_themes').smk_Accordion({
+                        closeAble: true
+                    });
 
-							$(this).parents('.acc_section').slideUp(150, false, function(){
-								$(this).remove();
-							});
-						}
-					});
+                    // Live update title and category(and other) on typing
+                    self.livetext('.this-section-theme-title-field', '.section-theme-title');
+                    self.livetext('.this-section-theme-id-field', '.section-theme-id');
+                    self.livetext('.this-section-theme-category-field', '.section-theme-category');
 
-					// Add new section
-					$( '.demonstrator_add_theme' ).on( 'click', function(){
-						var array_key = self.uniqid( 5, false),
-						    the_ul    = $(this).prev('.themes-repeatable-block'),
-						    cloned    = $(the_ul).find('.sfa-theme-noindex').clone();
+                    // Live demo link set
+                    $('.themes-repeatable-block').on('keyup change', '.this-section-theme-id-field', function () {
+                        var thisval = $(this).val(),
+                            base_demo_url_link = $(this).parents('.acc_section').find('.demo_url_link'),
+                            base_demo_url = base_demo_url_link.data('base-url');
 
-						$( the_ul ).children().removeClass('acc_active');
-						$( the_ul ).find('.acc_content').slideUp(150);
-						$( the_ul ).append( cloned.hide().addClass('acc_active') );
-						cloned.children('.acc_content').show();
-						cloned.slideDown(150);
-						cloned.removeClass('sfa-theme-noindex');
+                        if (base_demo_url) {
+                            var demo_url = base_demo_url.replace('__noindex__', thisval);
+                            base_demo_url_link.attr('href', demo_url).text(demo_url);
+                        }
+                    });
 
-						cloned.find('.this-section-theme-id-field').val( array_key ).trigger( 'change' );
+                    // Delete section
+                    $('.themes-repeatable-block').on('click', '.delete-theme', function (event) {
+                        event.preventDefault();
 
-						cloned.find('input, select').each(function(){
-							$(this).attr( 
-								'name', 
-								$(this).attr( 'name' ).replace( '__noindex__', array_key ) 
-							);
-						});
+                        var _block = $(this).parents('.themes-repeatable-block');
+                        var minimum_sections = parseInt(_block.data('minimum-sections'), 10);
+                        var lists = _block.children().not('.sfa-theme-noindex');
 
-						var base_demo_url_link = cloned.find('.demo_url_link'),
-						base_demo_url = base_demo_url_link.data('base-url');
+                        if (lists.length > minimum_sections) {
+                            if (!confirm('Are you sure that you want to delete this?'))
+                                return;
 
-						if( base_demo_url ){
-							var demo_url = base_demo_url.replace( '__noindex__', array_key );
-							base_demo_url_link.attr( 'href', demo_url ).text( demo_url );
-						}
-					});
+                            $(this).parents('.acc_section').slideUp(150, false, function () {
+                                $(this).remove();
+                            });
+                        }
+                    });
 
-				},
+                    // Add new section
+                    $('.demonstrator_add_theme').on('click', function () {
+                        var array_key = self.uniqid(5, false),
+                            the_ul = $(this).prev('.themes-repeatable-block'),
+                            cloned = $(the_ul).find('.sfa-theme-noindex').clone();
 
-				closeAllAccordionSections: function(){
-					var the_ul = $(this).prev('.themes-repeatable-block');
+                        $(the_ul).children().removeClass('acc_active');
+                        $(the_ul).find('.acc_content').slideUp(150);
+                        $(the_ul).append(cloned.hide().addClass('acc_active'));
+                        cloned.children('.acc_content').show();
+                        cloned.slideDown(150);
+                        cloned.removeClass('sfa-theme-noindex');
 
-					$( the_ul ).children().removeClass('acc_active');
-					$( the_ul ).find('.acc_content').slideUp(150);
-				},
+                        cloned.find('.this-section-theme-id-field').val(array_key).trigger('change');
 
-				repeatableStyles: function(){
+                        cloned.find('input, select').each(function () {
+                            $(this).attr(
+                                'name',
+                                $(this).attr('name').replace('__noindex__', array_key)
+                            );
+                        });
 
-					// Add new section
-					$( '.demonstrator_themes' ).on( 'click', '.demonstrator_add_style', function(){
-						var array_key = self.uniqid( 5, false),
-						    the_ul    = $(this).parent().prev('.demonstrator_styles'),
-						    cloned    = $(the_ul).find('.sfa-style-noindex').clone();
+                        var base_demo_url_link = cloned.find('.demo_url_link'),
+                            base_demo_url = base_demo_url_link.data('base-url');
 
-						$( the_ul ).append( cloned.hide() );
-						cloned.slideDown(150);
-						cloned.removeClass('sfa-style-noindex');
+                        if (base_demo_url) {
+                            var demo_url = base_demo_url.replace('__noindex__', array_key);
+                            base_demo_url_link.attr('href', demo_url).text(demo_url);
+                        }
+                    });
 
-						cloned.find('.this-section-style-id-field').val( array_key ).trigger( 'change' );
+                },
 
-						cloned.find('input, select').each(function(){
-							$(this).attr( 
-								'name', 
-								$(this).attr( 'name' ).replace( '__stylenoindex__', array_key ) 
-							);
-						});
+                closeAllAccordionSections: function () {
+                    var the_ul = $(this).prev('.themes-repeatable-block');
 
-					});
+                    $(the_ul).children().removeClass('acc_active');
+                    $(the_ul).find('.acc_content').slideUp(150);
+                },
 
-					// Delete style
-					$('.demonstrator_styles').on( 'click', '.delete-style', function( event ){
-						event.preventDefault();
-						var lists = $(this).parents('.demonstrator_styles').children();
-						if( lists.length > 1 ){
-							$(this).parent().slideUp(150, false, function(){
-								$(this).remove();
-							});
-						}
-					});
+                repeatableStyles: function () {
 
-				},
+                    // Add new section
+                    $('.demonstrator_themes').on('click', '.demonstrator_add_style', function () {
+                        var array_key = self.uniqid(5, false),
+                            the_ul = $(this).parent().prev('.demonstrator_styles'),
+                            cloned = $(the_ul).find('.sfa-style-noindex').clone();
 
-				// Make accordion sections sortable
-				sortableAccordionSections: function(){
-					var blocks = jQuery(".demonstrator_themes");
-					blocks.sortable({
-						items: "> li",
-						axis: "y",
-						tolerance: "pointer",
-						handle: ".acc_head",
-						cancel: '.cancel-drag',
-						start: function( event, ui ) {
-							self.closeAllAccordionSections();
-						}
-					});
-					blocks.find('h3.accordion-section-title').disableSelection();
-				},
+                        $(the_ul).append(cloned.hide());
+                        cloned.slideDown(150);
+                        cloned.removeClass('sfa-style-noindex');
 
-				/*
-				-------------------------------------------------------------------------------
-				Construct plugin
-				-------------------------------------------------------------------------------
-				*/
-				__construct: function(){
-					self = this;
+                        cloned.find('.this-section-style-id-field').val(array_key).trigger('change');
 
-					self.openFrame();
-					self.repeatableThemes();
-					self.repeatableStyles();
-					self.sortableAccordionSections();
+                        cloned.find('input, select').each(function () {
+                            $(this).attr(
+                                'name',
+                                $(this).attr('name').replace('__stylenoindex__', array_key)
+                            );
+                        });
 
-					return this;
-				}
+                    });
 
-			};
+                    // Delete style
+                    $('.demonstrator_styles').on('click', '.delete-style', function (event) {
+                        event.preventDefault();
+                        var lists = $(this).parents('.demonstrator_styles').children();
+                        if (lists.length > 1) {
+                            $(this).parent().slideUp(150, false, function () {
+                                $(this).remove();
+                            });
+                        }
+                    });
 
-			/*
-			-------------------------------------------------------------------------------
-			Rock it!
-			-------------------------------------------------------------------------------
-			*/
-			_base.__construct();
+                },
 
-		}
+                // Make accordion sections sortable
+                sortableAccordionSections: function () {
+                    var blocks = jQuery(".demonstrator_themes");
+                    blocks.sortable({
+                        items: "> li",
+                        axis: "y",
+                        tolerance: "pointer",
+                        handle: ".acc_head",
+                        cancel: '.cancel-drag',
+                        start: function (event, ui) {
+                            self.closeAllAccordionSections();
+                        }
+                    });
+                    blocks.find('h3.accordion-section-title').disableSelection();
+                },
 
-		//Plugin go!
-		init();
-		return this;
+                /*
+                -------------------------------------------------------------------------------
+                Construct plugin
+                -------------------------------------------------------------------------------
+                */
+                __construct: function () {
+                    self = this;
 
-	};
+                    self.openFrame();
+                    self.repeatableThemes();
+                    self.repeatableStyles();
+                    self.sortableAccordionSections();
 
-	$( document ).on( 'ready load', function(){
-		$( document ).DEMONSTRATOR_Plugin();
-	} );
+                    return this;
+                }
+
+            };
+
+            /*
+            -------------------------------------------------------------------------------
+            Rock it!
+            -------------------------------------------------------------------------------
+            */
+            _base.__construct();
+
+        }
+
+        //Plugin go!
+        init();
+        return this;
+
+    };
+
+    $(document).on('ready load', function () {
+        $(document).DEMONSTRATOR_Plugin();
+    });
 
 })(jQuery);

@@ -1,10 +1,11 @@
-<?php 
+<?php
+
 namespace Demonstrator;
 
 class Endpoint {
 
 	public $endpoints = false;
-	
+
 	public function __construct() {
 		$this->prepareEndpoints();
 
@@ -12,55 +13,56 @@ class Endpoint {
 		add_filter( 'template_redirect', array( $this, 'templateInclude' ) );
 	}
 
-	public function prepareEndpoints(){
+	public function prepareEndpoints() {
 		$switchers = dts_get_option( 'demonstrator_settings', 'items', array() );
 
-		if( !empty($switchers) ){
+		if ( ! empty( $switchers ) ) {
 			$this->endpoints = array_keys( $switchers );
 		}
 	}
-	
+
 	/*
 	-------------------------------------------------------------------------------
 	Apply endpoint
 	-------------------------------------------------------------------------------
 	*/
-	public function addEndpoint(){
-		if( !empty( $this->endpoints ) ){
-			foreach ($this->endpoints as $endpoint) {
+	public function addEndpoint() {
+		if ( ! empty( $this->endpoints ) ) {
+			foreach ( $this->endpoints as $endpoint ) {
 				add_rewrite_endpoint( $endpoint, EP_ALL );
 			}
 		}
 	}
 
-	public function templateInclude(){
-		if( is_admin() )
+	public function templateInclude() {
+		if ( is_admin() ) {
 			return;
+		}
 
-		$ep_is_set = false;
+		$ep_is_set         = false;
 		$current_query_var = false;
-		if( !empty( $this->endpoints ) ){
-			foreach ($this->endpoints as $endpoint) {
+		if ( ! empty( $this->endpoints ) ) {
+			foreach ( $this->endpoints as $endpoint ) {
 				$ep = get_query_var( $endpoint, null );
-				
-				if( ! isset( $ep ) ){
+
+				if ( ! isset( $ep ) ) {
 					continue;
-				}
-				else{
-					$ep_is_set = true;
+				} else {
+					$ep_is_set         = true;
 					$current_query_var = $endpoint;
 					break;
 				}
 			}
 		}
 
-		if( ! $ep_is_set )
+		if ( ! $ep_is_set ) {
 			return;
+		}
 
 		// Dirty! But it's better than doing the loop again in template.php ...
-		$GLOBALS[ 'demonstrator_current_query_var' ] = $current_query_var;
+		$GLOBALS['demonstrator_current_query_var'] = $current_query_var;
 
-		include DEMONSTRATOR_PATH .'components/template.php';
+		include DEMONSTRATOR_PATH . 'components/template.php';
 		exit;
 	}
 

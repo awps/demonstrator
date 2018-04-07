@@ -1,4 +1,4 @@
-<?php 
+<?php
 /**
  * Uninstall
  *
@@ -8,8 +8,8 @@
  */
 
 // If uninstall.php is not called by WordPress, die
-if (!defined('WP_UNINSTALL_PLUGIN')) {
-    die;
+if ( ! defined( 'WP_UNINSTALL_PLUGIN' ) ) {
+	die;
 }
 
 // else, execute some code on plugin uninstallation

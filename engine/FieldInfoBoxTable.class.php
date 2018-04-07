@@ -1,18 +1,19 @@
-<?php 
+<?php
+
 namespace Demonstrator;
 
-class FieldInfoBoxTable extends AbstractFieldType{
+class FieldInfoBoxTable extends AbstractFieldType {
 
-	public function render(){
+	public function render() {
 		$content = $this->getSetting( 'content' );
-		$table = '';
+		$table   = '';
 
-		if( is_array( $content ) ){
+		if ( is_array( $content ) ) {
 			$table .= '<table class="wp-list-table widefat fixed striped" style="max-width: 800px;">';
-			foreach ($content as $key => $value) {
+			foreach ( $content as $key => $value ) {
 				$table .= '<tr>
-					<td><strong>'. $key .'</strong></td>
-					<td>'. $value .'</td>
+					<td><strong>' . $key . '</strong></td>
+					<td>' . $value . '</td>
 				</tr>';
 			}
 			$table .= '</table>';

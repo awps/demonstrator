@@ -1,5 +1,6 @@
-<?php 
-final class DEMONSTRATOR_Plugin{
+<?php
+
+final class DEMONSTRATOR_Plugin {
 
 	/**
 	 * Plugin version.
@@ -23,70 +24,72 @@ final class DEMONSTRATOR_Plugin{
 	 * @var string
 	 */
 	protected static $_instance = null;
-	
+
 	//------------------------------------//--------------------------------------//
-	
+
 	/**
 	 * Plugin instance
 	 *
 	 * Makes sure that just one instance is allowed.
 	 *
-	 * @return object 
+	 * @return object
 	 */
 	public static function instance() {
 		if ( is_null( self::$_instance ) ) {
 			self::$_instance = new self();
 		}
+
 		return self::$_instance;
 	}
 
 	//------------------------------------//--------------------------------------//
-	
+
 	/**
 	 * Cloning is forbidden.
 	 *
-	 * @return void 
+	 * @return void
 	 */
 	public function __clone() {
 		_doing_it_wrong( __FUNCTION__, __( 'Cheatin&#8217; huh?', 'demonstrator' ), '1.0' );
 	}
 
 	//------------------------------------//--------------------------------------//
-	
+
 	/**
 	 * Unserializing instances of this class is forbidden.
 	 *
-	 * @return void 
+	 * @return void
 	 */
 	public function __wakeup() {
 		_doing_it_wrong( __FUNCTION__, __( 'Cheatin&#8217; huh?', 'demonstrator' ), '1.0' );
 	}
 
 	//------------------------------------//--------------------------------------//
-	
+
 	/**
 	 * Plugin configuration
 	 *
 	 * @param string $key Optional. Get the config value by key.
-	 * @return mixed 
+	 *
+	 * @return mixed
 	 */
-	public function config( $key = false ){
+	public function config( $key = false ) {
 		return demonstrator_config( $key );
 	}
 
 	//------------------------------------//--------------------------------------//
-	
+
 	/**
 	 * Build it!
 	 */
 	public function __construct() {
 		$this->version = DEMONSTRATOR_VERSION;
-		
+
 		/* Include core
 		--------------------*/
 		include_once $this->rootPath() . "autoloader.php";
 		include_once $this->rootPath() . "functions.php";
-		
+
 		$this->assets = new Demonstrator\Assets\Manage;
 
 		/* Activation and deactivation hooks
@@ -97,7 +100,7 @@ final class DEMONSTRATOR_Plugin{
 		/* Init core
 		-----------------*/
 		add_action( $this->config( 'action_name' ), array( $this, 'init' ), 0 );
-		
+
 		/* Load components, if any...
 		----------------------------------*/
 		$this->loadComponents();
@@ -108,13 +111,13 @@ final class DEMONSTRATOR_Plugin{
 	}
 
 	//------------------------------------//--------------------------------------//
-	
+
 	/**
 	 * Init the plugin.
-	 * 
+	 *
 	 * Attached to `init` action hook. Init functions and classes here.
 	 *
-	 * @return void 
+	 * @return void
 	 */
 	public function init() {
 		do_action( 'demonstrator:before_init' );
@@ -126,31 +129,31 @@ final class DEMONSTRATOR_Plugin{
 	}
 
 	//------------------------------------//--------------------------------------//
-	
+
 	/**
 	 * Localize
 	 *
-	 * @return void 
+	 * @return void
 	 */
-	public function loadTextDomain(){
-		load_plugin_textdomain( 
-			'demonstrator', 
-			false, 
-			$this->config( 'lang_path' ) 
+	public function loadTextDomain() {
+		load_plugin_textdomain(
+			'demonstrator',
+			false,
+			$this->config( 'lang_path' )
 		);
 	}
 
 	//------------------------------------//--------------------------------------//
-	
+
 	/**
 	 * Load components
 	 *
-	 * @return void 
+	 * @return void
 	 */
-	public function loadComponents(){
-		$components = glob( DEMONSTRATOR_PATH .'components/*', GLOB_ONLYDIR );
-		foreach ($components as $component_path) {
-			require_once trailingslashit( $component_path ) .'component.php';
+	public function loadComponents() {
+		$components = glob( DEMONSTRATOR_PATH . 'components/*', GLOB_ONLYDIR );
+		foreach ( $components as $component_path ) {
+			require_once trailingslashit( $component_path ) . 'component.php';
 		}
 	}
 
@@ -159,11 +162,11 @@ final class DEMONSTRATOR_Plugin{
 	Styles
 	-------------------------------------------------------------------------------
 	*/
-	public function addStyles( $styles ){
+	public function addStyles( $styles ) {
 		$this->assets->addStyles( $styles );
 	}
 
-	public function addStyle( $handle, $s = false ){
+	public function addStyle( $handle, $s = false ) {
 		$this->assets->addStyle( $handle, $s );
 	}
 
@@ -172,10 +175,11 @@ final class DEMONSTRATOR_Plugin{
 	Scripts
 	-------------------------------------------------------------------------------
 	*/
-	public function addScripts( $scripts ){
+	public function addScripts( $scripts ) {
 		$this->assets->addScripts( $scripts );
 	}
-	public function addScript( $handle, $s = false ){
+
+	public function addScript( $handle, $s = false ) {
 		$this->assets->addScript( $handle, $s );
 	}
 
@@ -210,7 +214,7 @@ final class DEMONSTRATOR_Plugin{
 	 *
 	 * @return string
 	 */
-	public function rootURL(){
+	public function rootURL() {
 		return DEMONSTRATOR_URL;
 	}
 
@@ -221,7 +225,7 @@ final class DEMONSTRATOR_Plugin{
 	 *
 	 * @return string
 	 */
-	public function rootPath(){
+	public function rootPath() {
 		return DEMONSTRATOR_PATH;
 	}
 
@@ -229,15 +233,15 @@ final class DEMONSTRATOR_Plugin{
 
 	/**
 	 * Get assets url.
-	 * 
+	 *
 	 * @param string $file Optionally specify a file name
 	 *
 	 * @return string
 	 */
-	public function assetsURL( $file = false ){
+	public function assetsURL( $file = false ) {
 		$path = DEMONSTRATOR_URL . 'assets/';
-		
-		if( $file ){
+
+		if ( $file ) {
 			$path = $path . $file;
 		}
 

@@ -4,211 +4,211 @@
  * Author URL:  http://zerowp.com/
  * License:     MIT
  */
-;(function ( $ ) {
+;(function ($) {
 
-	$.fn.smk_Accordion = function( options ) {
-		
-		if (this.length > 1){
-			this.each(function() { 
-				$(this).smk_Accordion(options);
-			});
-			return this;
-		}
+    $.fn.smk_Accordion = function (options) {
 
-		// To avoid scope issues, use 'plugin' instead of 'this'
-		// to reference this class from internal events and functions.
-		var plugin = this;
+        if (this.length > 1) {
+            this.each(function () {
+                $(this).smk_Accordion(options);
+            });
+            return this;
+        }
 
-		this.isInteger =  function(value) {
-			return typeof value === 'number' && 
-				isFinite(value) && 
-				Math.floor(value) === value;
-		};
+        // To avoid scope issues, use 'plugin' instead of 'this'
+        // to reference this class from internal events and functions.
+        var plugin = this;
 
-		this.isArray = function(arg) {
-			return Object.prototype.toString.call(arg) === '[object Array]';
-		};
+        this.isInteger = function (value) {
+            return typeof value === 'number' &&
+                isFinite(value) &&
+                Math.floor(value) === value;
+        };
 
-		this.isObject = function isObject(arg) {
-			return Object.prototype.toString.call(arg) === '[object Object]';
-		};
+        this.isArray = function (arg) {
+            return Object.prototype.toString.call(arg) === '[object Array]';
+        };
 
-		// Defaults
-		var settings = $.extend({
-			closeAble:  false, // Allow self close.
-			closeOther: true, // Close other sections.
-			slideSpeed: 150, // Animation Speed.
-			activeIndex: 1  // The section open on first init.
-		}, options );
+        this.isObject = function isObject(arg) {
+            return Object.prototype.toString.call(arg) === '[object Object]';
+        };
 
-		// Assign to plugin options data-* attributes if they exists
-		$.each(settings, function(option, value) {
-			var data_attr = option.replace(/([A-Z])/g, '-$1').toLowerCase().toString(), //`optionsName` becomes `option-name`
-			new_val       =  plugin.data( data_attr );
+        // Defaults
+        var settings = $.extend({
+            closeAble: false, // Allow self close.
+            closeOther: true, // Close other sections.
+            slideSpeed: 150, // Animation Speed.
+            activeIndex: 1  // The section open on first init.
+        }, options);
 
-			if( new_val || false === new_val ){
-				settings[ option ] = new_val;
-			}
-		});
+        // Assign to plugin options data-* attributes if they exists
+        $.each(settings, function (option, value) {
+            var data_attr = option.replace(/([A-Z])/g, '-$1').toLowerCase().toString(), //`optionsName` becomes `option-name`
+                new_val = plugin.data(data_attr);
 
-		if( settings.activeIndex === false || settings.closeOther === false ){
-			settings.closeAble = true;
-		}
+            if (new_val || false === new_val) {
+                settings[option] = new_val;
+            }
+        });
 
-		// "Constructor"
-		var init = function() {
+        if (settings.activeIndex === false || settings.closeOther === false) {
+            settings.closeAble = true;
+        }
 
-			if( options === 'refresh' ){
-				plugin.unbind();
-				plugin.destroy();
-			}
+        // "Constructor"
+        var init = function () {
 
-			plugin.createStructure();
-			plugin.clickHead();
-		}
+            if (options === 'refresh') {
+                plugin.unbind();
+                plugin.destroy();
+            }
 
-		// Toggle a single section by index
-		this.toggleSection = function(mode, section, speed){
-			if( section instanceof jQuery || plugin.isArray( section ) ){
-				var this_section = section;
-			}
-			else if( plugin.isInteger( section ) ){
-				var this_section = plugin.children().eq(section - 1);
-			}
+            plugin.createStructure();
+            plugin.clickHead();
+        }
 
-			$.each(this_section, function(index, sect) {
-				if( plugin.isInteger( sect ) ){
-					var acc_content = $( plugin.children().eq(sect - 1) ).children().eq(1);
-				}
-				else{
-					var acc_content = $(sect).children().eq(1);
-				}
+        // Toggle a single section by index
+        this.toggleSection = function (mode, section, speed) {
+            if (section instanceof jQuery || plugin.isArray(section)) {
+                var this_section = section;
+            }
+            else if (plugin.isInteger(section)) {
+                var this_section = plugin.children().eq(section - 1);
+            }
 
-				speed = ( speed >= 0 ) ? speed : settings.slideSpeed;
+            $.each(this_section, function (index, sect) {
+                if (plugin.isInteger(sect)) {
+                    var acc_content = $(plugin.children().eq(sect - 1)).children().eq(1);
+                }
+                else {
+                    var acc_content = $(sect).children().eq(1);
+                }
 
-				if( speed > 0 ){
-					( 'open' === mode ) ? acc_content.slideDown( speed ) : acc_content.slideUp( speed );
-				}
-				else{
-					( 'open' === mode ) ? acc_content.show( speed ) : acc_content.hide( speed );
-				}
+                speed = (speed >= 0) ? speed : settings.slideSpeed;
 
-				( 'open' === mode ) ? $(sect).addClass('acc_active') : $(sect).removeClass('acc_active');
-			});
-		}
+                if (speed > 0) {
+                    ('open' === mode) ? acc_content.slideDown(speed) : acc_content.slideUp(speed);
+                }
+                else {
+                    ('open' === mode) ? acc_content.show(speed) : acc_content.hide(speed);
+                }
 
-		// Open a single section by index
-		this.openSection = function(section, speed){
-			plugin.toggleSection( 'open', section, speed );
-		}
+                ('open' === mode) ? $(sect).addClass('acc_active') : $(sect).removeClass('acc_active');
+            });
+        }
 
-		// Close a single section by index
-		this.closeSection = function(section, speed){
-			plugin.toggleSection( 'close', section, speed );
-		}
+        // Open a single section by index
+        this.openSection = function (section, speed) {
+            plugin.toggleSection('open', section, speed);
+        }
 
-		// Close all sections
-		this.closeAllSections = function(current_accortdion_sections, speed){
-			plugin.closeSection( current_accortdion_sections, speed );
-		}
+        // Close a single section by index
+        this.closeSection = function (section, speed) {
+            plugin.toggleSection('close', section, speed);
+        }
 
-		this.destroy = function(){
+        // Close all sections
+        this.closeAllSections = function (current_accortdion_sections, speed) {
+            plugin.closeSection(current_accortdion_sections, speed);
+        }
 
-			//Add classes to accordion head and content for each section
-			$.each( plugin.children(), function(index, elem){
-				var _t = $(elem),
-				childs = _t.children();
+        this.destroy = function () {
 
-				//Create sections if they were not created already
-				_t.removeClass('acc_section');
+            //Add classes to accordion head and content for each section
+            $.each(plugin.children(), function (index, elem) {
+                var _t = $(elem),
+                    childs = _t.children();
 
-				//Add the necesary css clases
-				$(childs[0]).removeClass('acc_head');
-				$(childs[1]).removeClass('acc_content');
-			});
-			
-			//Hide inactive
-			plugin.children('.acc_section').not('.acc_active').children('.acc_content').show();
+                //Create sections if they were not created already
+                _t.removeClass('acc_section');
 
-		}
+                //Add the necesary css clases
+                $(childs[0]).removeClass('acc_head');
+                $(childs[1]).removeClass('acc_content');
+            });
 
-		// Add .smk_accordion class
-		this.createStructure = function() {
+            //Hide inactive
+            plugin.children('.acc_section').not('.acc_active').children('.acc_content').show();
 
-			//Add Main CSS Class
-			plugin.addClass('smk_accordion');
+        }
 
-			//Add classes to accordion head and content for each section
-			$.each( plugin.children(), function(index, elem){
-				var _t = $(elem),
-				childs = _t.children();
+        // Add .smk_accordion class
+        this.createStructure = function () {
 
-				//Create sections if they were not created already
-				_t.addClass('acc_section');
+            //Add Main CSS Class
+            plugin.addClass('smk_accordion');
 
-				//Make sure the section content exists. If not, then append an empty div. 
-				if( childs.length < 2 ){
-					_t.append('<div class="acc_content"></div>');
-				}
+            //Add classes to accordion head and content for each section
+            $.each(plugin.children(), function (index, elem) {
+                var _t = $(elem),
+                    childs = _t.children();
 
-				//Add the necesary css clases
-				$(childs[0]).addClass('acc_head');
-				$(childs[1]).addClass('acc_content');
-			});
-			
-			//Hide inactive
-			plugin.children('.acc_section').not('.acc_active').children('.acc_content').hide();
+                //Create sections if they were not created already
+                _t.addClass('acc_section');
 
-			//Active index
-			if( plugin.isArray( settings.activeIndex ) ){
-				plugin.openSection( settings.activeIndex, 0 );
-			}
-			else if(settings.activeIndex > 1){
-				plugin.openSection( settings.activeIndex, 0 );
-			}
-			else if( false !== settings.activeIndex ){
-				plugin.openSection( 1, 0 );
-			}
+                //Make sure the section content exists. If not, then append an empty div. 
+                if (childs.length < 2) {
+                    _t.append('<div class="acc_content"></div>');
+                }
 
-		}
+                //Add the necesary css clases
+                $(childs[0]).addClass('acc_head');
+                $(childs[1]).addClass('acc_content');
+            });
 
-		// Action when the user click accordion head
-		this.clickHead = function() {
+            //Hide inactive
+            plugin.children('.acc_section').not('.acc_active').children('.acc_content').hide();
 
-			plugin.on('click', '.acc_head', function(){
-				
-				var s_parent = $(this).parent(); 
-				
-				// Close other sections when this section is opened
-				if( s_parent.hasClass('acc_active') === false && settings.closeOther ){
-					plugin.closeSection( plugin.children() );
-				}
+            //Active index
+            if (plugin.isArray(settings.activeIndex)) {
+                plugin.openSection(settings.activeIndex, 0);
+            }
+            else if (settings.activeIndex > 1) {
+                plugin.openSection(settings.activeIndex, 0);
+            }
+            else if (false !== settings.activeIndex) {
+                plugin.openSection(1, 0);
+            }
 
-				// Allow to close itself
-				if( s_parent.hasClass('acc_active') ){
-					if( false !== settings.closeAble || plugin.children().length === 1 ){
-						plugin.closeSection( s_parent );
-					}
-				}
+        }
 
-				// Default behavior
-				else{
-					plugin.openSection( s_parent );
-				}
+        // Action when the user click accordion head
+        this.clickHead = function () {
 
-			});
+            plugin.on('click', '.acc_head', function () {
 
-		}
+                var s_parent = $(this).parent();
 
-		//"Constructor" init
-		init();
-		return this;
+                // Close other sections when this section is opened
+                if (s_parent.hasClass('acc_active') === false && settings.closeOther) {
+                    plugin.closeSection(plugin.children());
+                }
 
-	};
+                // Allow to close itself
+                if (s_parent.hasClass('acc_active')) {
+                    if (false !== settings.closeAble || plugin.children().length === 1) {
+                        plugin.closeSection(s_parent);
+                    }
+                }
 
-	// Allow to create accordions only with `.smk_accordion` class
-	jQuery(document).ready(function($){
-		$(".smk_accordion").smk_Accordion();
-	});
+                // Default behavior
+                else {
+                    plugin.openSection(s_parent);
+                }
 
-}( jQuery ));
+            });
+
+        }
+
+        //"Constructor" init
+        init();
+        return this;
+
+    };
+
+    // Allow to create accordions only with `.smk_accordion` class
+    jQuery(document).ready(function ($) {
+        $(".smk_accordion").smk_Accordion();
+    });
+
+}(jQuery));
