@@ -1,0 +1,11 @@
+{
+    "name": "awps/demonstrator",
+    "description": "A theme switcher perfect to connect different site demos.",
+    "authors": [
+        {
+            "name": "Andrei Surdu",
+            "email": "smartik89@gmail.com"
+        }
+    ],
+    "require": {}
+}
