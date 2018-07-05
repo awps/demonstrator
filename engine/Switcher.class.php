@@ -21,6 +21,12 @@ class Switcher {
 		return ! empty( $this->switcher['site_url'] ) ? $this->switcher['site_url'] : false;
 	}
 
+	public function getImgRatio() {
+		return ! empty( $this->switcher['img_size_ratio'] ) && $this->switcher['img_size_ratio'] !== 'auto'
+			? sanitize_html_class( $this->switcher['img_size_ratio'] ) . ' has-ratio'
+			: '';
+	}
+
 	public function getSwitcherTitle() {
 		$title = ! empty( $this->switcher['label'] ) ? $this->switcher['label'] : $this->switcher['id'];
 

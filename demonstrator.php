@@ -3,14 +3,14 @@
  * Plugin Name: Demonstrator
  * Plugin URI:  http://zerowp.com/demonstrator
  * Description: More than a theme switcher!
- * Author:      ZeroWP Team
+ * Author:      Andrei Surdu
  * Author URI:  http://zerowp.com/
  * License:     GPL-2.0+
  * License URI: http://www.gnu.org/licenses/gpl-2.0.txt
  * Text Domain: demonstrator
  * Domain Path: /languages
  *
- * Version:     1.2.1
+ * Version:     1.3.0
  * 
  */
 
@@ -26,7 +26,7 @@ function demonstrator_config( $key = false ) {
 	$settings = apply_filters( 'demonstrator:config_args', array(
 
 		// Plugin data
-		'version'          => '1.2.1',
+		'version'          => '1.3.0',
 		'min_php_version'  => '5.3',
 
 		// The list of required plugins. 'slug' => array 'name and uri'

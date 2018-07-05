@@ -51,12 +51,14 @@ class FieldThemes extends AbstractFieldType {
 	}
 
 	public function fields( $theme_id, $value ) {
-		$name         = $this->getFieldName() . '[' . $theme_id . ']';
-		$label        = ! empty( $value['label'] ) ? $value['label'] : '';
-		$img          = ! empty( $value['img'] ) ? $value['img'] : '';
-		$purchase_url = ! empty( $value['purchase_url'] ) ? $value['purchase_url'] : '';
-		$category     = ! empty( $value['category'] ) ? $value['category'] : '';
-		// $demo_url          = !empty( $value['demo_url'] ) ? $value['demo_url'] : '';
+		$name              = $this->getFieldName() . '[' . $theme_id . ']';
+		$label             = ! empty( $value['label'] ) ? $value['label'] : '';
+		$img               = ! empty( $value['img'] ) ? $value['img'] : '';
+		$purchase_url      = ! empty( $value['purchase_url'] ) ? $value['purchase_url'] : '';
+		$category          = ! empty( $value['category'] ) ? $value['category'] : '';
+		$custom_url        = ! empty( $value['custom_url'] ) ? $value['custom_url'] : '';
+		$custom_text       = ! empty( $value['custom_text'] ) ? $value['custom_text'] : '';
+		$load_mode         = ! empty( $value['load_mode'] ) ? $value['load_mode'] : '_blank';
 		$price             = ! empty( $value['price'] ) ? $value['price'] : '';
 		$short_description = ! empty( $value['short_description'] ) ? $value['short_description'] : '';
 		$status            = ! empty( $value['status'] ) ? $value['status'] : '';
@@ -106,11 +108,6 @@ class FieldThemes extends AbstractFieldType {
 			'<input name="' . $name . '[purchase_url]' . '" type="text" class="widefat" value="' . $purchase_url . '" />'
 		);
 
-		// $output .= $this->tRow( 
-		// 	__( 'Demo URL', 'demonstrator' ),
-		// 	'<input name="'. $name . '[demo_url]' .'" type="text" class="widefat" value="'. $demo_url .'" />'
-		// );
-
 		$output .= $this->tRow(
 			__( 'Short description', 'demonstrator' ),
 			'<textarea name="' . $name . '[short_description]' . '" class="widefat">' . esc_textarea( $short_description ) . '</textarea>',
@@ -142,6 +139,30 @@ class FieldThemes extends AbstractFieldType {
 				'<a class="demo_url_link" data-base-url="' . $router->getThemeUrl( '__noindex__' ) . '" href="' . $router->getThemeUrl( $theme_id ) . '" target="_blank">' . $router->getThemeUrl( $theme_id ) . '</a>'
 			);
 		}
+
+		$output .= $this->tRow(
+			__( 'Custom button URL', 'demonstrator' ),
+			'<input name="' . $name . '[custom_url]' . '" type="text" class="widefat" value="' . $custom_url . '" />',
+			'col-6',
+			__( 'Any valid URL.', 'demonstrator' )
+		);
+
+		$output .= $this->tRow(
+			__( 'Custom button text', 'demonstrator' ),
+			'<input name="' . $name . '[custom_text]' . '" type="text" class="widefat" value="' . $custom_text . '" />',
+			'col-3'
+		);
+
+		$select = '<select name="' . $name . '[load_mode]' . '" class="widefat">';
+		$select .= '<option value="_blank" ' . selected( $load_mode, "_blank", false ) . '>' . __( 'In a new window', 'demonstrator' ) . '</option>';
+		$select .= '<option value="in_iframe" ' . selected( $load_mode, "in_iframe", false ) . '>' . __( 'In iframe', 'demonstrator' ) . '</option>';
+		$select .= '</select>';
+
+		$output .= $this->tRow(
+			__( 'Load mode', 'demonstrator' ),
+			$select,
+			'col-3'
+		);
 
 		$output .= '</div>';
 		$output .= '</div>';
@@ -202,11 +223,18 @@ class FieldThemes extends AbstractFieldType {
 		return $output;
 	}
 
-	public function tRow( $title, $field, $col_class = 'col-12' ) {
+	public function tRow( $title, $field, $col_class = false, $description = '' ) {
+		$col_class = ! empty( $col_class ) ? $col_class : 'col-12';
+
 		$output = '<div class="' . $col_class . '">';
 		$output .= '<div class="trow">';
 		$output .= '<div class="tlabel">' . $title . '</div>';
 		$output .= '<div class="tfield">' . $field . '</div>';
+
+		if ( ! empty( $description ) ) {
+			$output .= '<p class="description">' . $description . '</p>';
+		}
+
 		$output .= '</div>';
 		$output .= '</div>';
 

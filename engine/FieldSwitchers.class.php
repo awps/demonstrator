@@ -27,6 +27,7 @@ class FieldSwitchers extends FieldThemes {
 		$site_url                = ! empty( $value['site_url'] ) ? $value['site_url'] : '';
 		$envato_username         = ! empty( $value['envato_username'] ) ? $value['envato_username'] : '';
 		$creativemarket_username = ! empty( $value['creativemarket_username'] ) ? $value['creativemarket_username'] : '';
+		$img_size_ratio          = ! empty( $value['img_size_ratio'] ) ? $value['img_size_ratio'] : '';
 
 		$themes_grid = ! empty( $value['themes_grid'] ) ? absint( $value['themes_grid'] ) : 3;
 		$themes_grid = ( $themes_grid > 0 && $themes_grid < 5 ) ? $themes_grid : 3;
@@ -115,13 +116,32 @@ class FieldSwitchers extends FieldThemes {
 		$output .= $this->tRow(
 			__( 'Envato Username', 'demonstrator' ),
 			'<input name="' . $name . '[envato_username]' . '" type="text" class="widefat" value="' . $envato_username . '" />',
-			'col-sm-6'
+			'col-sm-4'
 		);
 
 		$output .= $this->tRow(
 			__( 'CreativeMarket Username', 'demonstrator' ),
 			'<input name="' . $name . '[creativemarket_username]' . '" type="text" class="widefat" value="' . $creativemarket_username . '" />',
-			'col-sm-6'
+			'col-sm-4'
+		);
+
+
+		$select = '<select name="' . $name . '[img_size_ratio]' . '" class="widefat">';
+		$select .= $this->option( 'auto', $img_size_ratio, __( ' Auto ', 'demonstrator' ) );
+		$select .= $this->option( 'ratio-1-1', $img_size_ratio, __( ' 1:1 ', 'demonstrator' ) );
+		$select .= $this->option( 'ratio-4-3', $img_size_ratio, __( ' 4:3 ', 'demonstrator' ) );
+		$select .= $this->option( 'ratio-16-9', $img_size_ratio, __( ' 16:9 ', 'demonstrator' ) );
+		$select .= $this->option( 'ratio-16-10', $img_size_ratio, __( ' 16:10 ', 'demonstrator' ) );
+		$select .= $this->option( 'ratio-1-2', $img_size_ratio, __( ' 1:2 ', 'demonstrator' ) );
+		$select .= $this->option( 'ratio-3-4', $img_size_ratio, __( ' 3:4 ', 'demonstrator' ) );
+		$select .= $this->option( 'ratio-9-16', $img_size_ratio, __( ' 9:16 ', 'demonstrator' ) );
+		$select .= $this->option( 'ratio-10-16', $img_size_ratio, __( ' 10:16 ', 'demonstrator' ) );
+		$select .= '</select>';
+
+		$output .= $this->tRow(
+			__( 'Image aspect ratio', 'demonstrator' ),
+			$select,
+			'col-3'
 		);
 
 		$output .= '</div>';
@@ -152,6 +172,10 @@ class FieldSwitchers extends FieldThemes {
 		}
 
 		return $value;
+	}
+
+	protected function option( $value, $check_for_value, $label ) {
+		return '<option value="' . $value . '" ' . selected( $check_for_value, $value, false ) . '>' . $label . '</option>';
 	}
 
 }

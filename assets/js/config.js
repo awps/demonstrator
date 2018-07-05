@@ -50,8 +50,21 @@
 
                         // Set the initial URL for "Purchase" button.
                         self.setPurchaseUrl(_theme_id);
+
+                        // Set the initial URL for "Custom" button.
+                        self.setCustomUrl(_theme_id);
                     }
 
+
+                    $('#custom_button').on('click', function () {
+                        var _t = $(this);
+
+                        if (_t.hasClass('is-iframe')) {
+                            event.preventDefault();
+
+                            $('#preview').attr('src', _t.attr('href'));
+                        }
+                    });
 
                 },
 
@@ -165,6 +178,9 @@
                         // Set the URL for "Purchase" button
                         self.setPurchaseUrl(_theme_id);
 
+                        // Set the URL for "Custom" button
+                        self.setCustomUrl(_theme_id);
+
                         // Finally load the URL
                         self.loadUrl(_theme_id, _style_id, _route_url);
 
@@ -233,6 +249,45 @@
                     }
 
                     return _url;
+                },
+
+                getCustomButtonUrl: function (_theme_id) {
+                    var _url = false,
+                        _theme = demonstrator_themes[_theme_id];
+
+                    if (_theme !== undefined) {
+                        if (_theme.custom_url) {
+                            _url = _theme.custom_url;
+                        }
+                    }
+
+                    return _url;
+                },
+
+                getCustomButtonLoadMode: function (_theme_id) {
+                    var _url = false,
+                        _theme = demonstrator_themes[_theme_id];
+
+                    if (_theme !== undefined) {
+                        if (_theme.load_mode) {
+                            _url = _theme.load_mode;
+                        }
+                    }
+
+                    return _url;
+                },
+
+                getCustomButtonText: function (_theme_id) {
+                    var _text = '[?]',
+                        _theme = demonstrator_themes[_theme_id];
+
+                    if (_theme !== undefined) {
+                        if (_theme.custom_text) {
+                            _text = _theme.custom_text;
+                        }
+                    }
+
+                    return _text;
                 },
 
                 // Determine if a theme has styles or just a single demo URL
@@ -358,6 +413,27 @@
 
                     // Set style menu name
                     self.setMenuLabel('styles', _theme_id, self.getThemeDefaultStyleId(_theme_id));
+                },
+
+                setCustomUrl: function (_theme_id) {
+                    var _url = self.getCustomButtonUrl(_theme_id),
+                        _text = self.getCustomButtonText(_theme_id),
+                        _load_mode = self.getCustomButtonLoadMode(_theme_id),
+                        _btn = $('#custom_button');
+
+                    _btn.attr('href', '#').addClass('hidden');
+
+                    if (_url !== false) {
+                        _btn.attr('href', _url).removeClass('hidden');
+                    }
+
+                    _btn.removeClass('is-iframe');
+
+                    if (_load_mode !== false && _load_mode === 'in_iframe') {
+                        _btn.addClass('is-iframe');
+                    }
+
+                    _btn.find('.placeholder').text(_text);
                 },
 
                 setPurchaseUrl: function (_theme_id) {

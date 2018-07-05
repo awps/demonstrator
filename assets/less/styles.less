@@ -81,7 +81,7 @@ body {
     }
   }
 
-  .btn-buy,
+  .bar-btn,
   .menu-themes,
   .menu-styles,
   .toggle-bar,
@@ -103,14 +103,27 @@ body {
     background-color: darken(@bar_bg, 13%);
     color: @bar_color;
     box-shadow: 0 2px 0 darken(@bar_bg, 18%);
+    &:hover {
+      background: darken(@bar_bg, 20%);
+    }
   }
 
-  .btn-buy {
-    box-shadow: 0 2px 0 darken(@btn_bg, 5%);
-    background-color: @btn_bg;
-    color: @btn_color;
-    &:hover {
-      background: darken(@btn_bg, 3%);
+  .bar-btn {
+    &.btn-buy {
+      box-shadow: 0 2px 0 darken(@btn_bg, 5%);
+      background-color: @btn_bg;
+      color: @btn_color;
+      &:hover {
+        background: darken(@btn_bg, 8%);
+      }
+    }
+    &.btn-custom {
+      background-color: darken(@bar_bg, 13%);
+      color: @bar_color;
+      box-shadow: 0 2px 0 darken(@bar_bg, 18%);
+      &:hover {
+        background: darken(@bar_bg, 20%);
+      }
     }
   }
 
@@ -272,6 +285,40 @@ body {
         width: 100%;
         min-height: 100px;
         position: relative;
+        background-position: top center;
+        background-repeat: no-repeat;
+        background-size: cover;
+
+        &.has-ratio {
+          img {
+            display: none;
+          }
+        }
+
+        &.ratio-1-1 {
+          padding: 0 0 100% 0;
+        }
+        &.ratio-4-3 {
+          padding: 0 0 100%/4*3 0;
+        }
+        &.ratio-16-9 {
+          padding: 0 0 100%/16*9 0;
+        }
+        &.ratio-16-10 {
+          padding: 0 0 100%/16*10 0;
+        }
+        &.ratio-1-2 {
+          padding: 0 0 200% 0;
+        }
+        &.ratio-3-4 {
+          padding: 0 0 4/3*100%0;
+        }
+        &.ratio-9-16 {
+          padding: 0 0 16/9*100% 0;
+        }
+        &.ratio-10-16 {
+          padding: 0 0 16/10*100% 0;
+        }
       }
       .description-pointer {
         position: absolute;
@@ -409,20 +456,28 @@ body {
     .logo {
       display: none;
     }
+    .top-btn {
+      display: none;
+    }
     .menu-styles,
     .menu-themes,
-    .btn-buy {
-      font-size: 18px;
-      padding: 13px 30px;
+    .bar-btn {
+      margin: 0;
+      border-radius: 0;
+      font-size: 20px;
+      padding: 13px 25px 14px;
       .placeholder {
         display: none;
       }
-    }
-    .btn-buy {
-      font-size: 20px;
-      margin: 0;
-      border-radius: 0;
-      padding: 13px 25px 14px;
+
+      &.btn-custom {
+        font-size: 14px;
+        padding: 17px 10px 17px;
+
+        .placeholder {
+          display: block;
+        }
+      }
     }
   }
 }
@@ -434,7 +489,7 @@ body {
     }
     .menu-styles,
     .menu-themes,
-    .btn-buy {
+    .bar-btn {
       font-size: 20px;
       margin: 0;
       border-radius: 0;

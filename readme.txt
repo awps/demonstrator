@@ -4,7 +4,7 @@ Donate link: https://paypal.me/zerowp
 Tags: theme, switcher, demo, connect, themeforest, creativemarket, codecanyon, mojothemes
 Requires at least: 4.7
 Tested up to: 4.8
-Stable tag: 1.2.1
+Stable tag: 1.3.0
 License: GPL-2.0+
 License URI: http://www.gnu.org/licenses/gpl-2.0.txt
 

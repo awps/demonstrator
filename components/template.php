@@ -37,11 +37,12 @@
 
 	<?php
 
-	$switcher_id = $GLOBALS['demonstrator_current_query_var'];
-	$tpl         = new Demonstrator\Switcher( $switcher_id );
-	$themes      = $tpl->getThemes();
-	$logo_url    = $tpl->getLogoUrl();
-	$site_url    = $tpl->getSiteUrl();
+	$switcher_id    = $GLOBALS['demonstrator_current_query_var'];
+	$tpl            = new Demonstrator\Switcher( $switcher_id );
+	$themes         = $tpl->getThemes();
+	$logo_url       = $tpl->getLogoUrl();
+	$site_url       = $tpl->getSiteUrl();
+	$img_size_ratio = $tpl->getImgRatio();
 
 	$router       = new Demonstrator\Router( $switcher_id );
 	$query_var    = $router->getQueryVar();
@@ -138,7 +139,10 @@ if ( ! empty( $loaded_style ) ) {
                     Admin
                 </a>
 			<?php endif; ?>
-            <a id="purchase" href="#" target="_blank" class="btn-buy hidden">
+            <a id="custom_button" href="#" target="_blank" class="bar-btn btn-custom hidden">
+                <span class="placeholder"><?php _e( '[?]', 'demonstrator' ) ?></span>
+            </a>
+            <a id="purchase" href="#" target="_blank" class="bar-btn btn-buy hidden">
                 <span class="the-icon flaticon-commerce"></span>
                 <span class="placeholder"><?php _e( 'Purchase', 'demonstrator' ) ?></span>
             </a>
@@ -194,10 +198,16 @@ if ( ! empty( $loaded_style ) ) {
 						$admin_notice_badge = '<span class="admin-notice-badge">' . __( 'Private!', 'powerblog' ) . '</span>';
 					}
 
+
+					if ( ! empty( $img_size_ratio ) ) {
+						$theme_bg_image = 'style="background-image: url(' . $theme['img'] . ')"';
+						$theme_image    = '<img src="data:image/png;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs=" data-src="' . $theme['img'] . '" />';
+					}
+
 					echo '<div class="theme-item ' . $theme_id . $active . '">
 					<a data-theme-id="' . $theme_id . '" href="' . esc_url( $url ) . '" class="a-demo-item-link theme status-' . $theme_status . '" data-route="' . $router->getThemeUrl( $theme_id ) . '">
-						<div class="item-img">
-							<img src="data:image/png;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs=" data-src="' . $theme['img'] . '" />
+						<div class="item-img ' . $img_size_ratio . '" ' . $theme_bg_image . '>
+							' . $theme_image . '
 							' . $description . '
 							' . $admin_notice_badge . '
 						</div>
@@ -244,9 +254,16 @@ if ( ! empty( $loaded_style ) ) {
 						$url    = is_string( $style['url'] ) ? $style['url'] : '#';
 						$hidden = ( $loaded_theme !== $theme_id ) ? ' hidden' : '';
 
+						if ( ! empty( $img_size_ratio ) ) {
+							$style_bg_image = 'style="background-image: url(' . $style['img'] . ')"';
+							$style_image    = '<img src="data:image/png;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs=" data-src="' . $style['img'] . '" />';
+						}
+
 						echo '<div class="style-item ' . $theme_id . $hidden . '">
 						<a data-theme-id="' . $theme_id . '" data-style-id="' . $style_id . '" href="' . $url . '" class="a-demo-item-link style" data-route="' . $router->getStyleUrl( $theme_id, $style_id ) . '">
-							<div class="item-img"><img src="data:image/png;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs=" data-src="' . $style['img'] . '" /></div>
+							<div class="item-img ' . $img_size_ratio . '" ' . $style_bg_image . '>
+                                ' . $style_image . '
+                            </div>
 							<div class="label">' . $style['label'] . '</div>
 						</a>
 					</div>';
@@ -262,16 +279,16 @@ if ( ! empty( $loaded_style ) ) {
 <?php do_action( 'demonstrator_footer' ); ?>
 
 <script>
-    function init() {
-        var imgDefer = document.getElementsByTagName('img');
-        for (var i = 0; i < imgDefer.length; i++) {
-            if (imgDefer[i].getAttribute('data-src')) {
-                imgDefer[i].setAttribute('src', imgDefer[i].getAttribute('data-src'));
-            }
-        }
-    }
-
-    window.onload = init;
+    // function init() {
+    //     var imgDefer = document.getElementsByTagName('img');
+    //     for (var i = 0; i < imgDefer.length; i++) {
+    //         if (imgDefer[i].getAttribute('data-src')) {
+    //             imgDefer[i].setAttribute('src', imgDefer[i].getAttribute('data-src'));
+    //         }
+    //     }
+    // }
+    //
+    // window.onload = init;
 </script>
 </body>
 </html>
